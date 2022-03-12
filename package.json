@@ -22,6 +22,7 @@
     "@mantine/notifications": "^3.6.11",
     "@modulz/radix-icons": "^4.0.0",
     "@reduxjs/toolkit": "^1.8.0",
+    "@types/url-regex": "^5.0.0",
     "chart.js": "^3.7.1",
     "cookie-parser": "^1.4.6",
     "dayjs": "^1.10.7",
@@ -32,10 +33,12 @@
     "react-chartjs-2": "^4.0.1",
     "react-dom": "^17.0.2",
     "react-icons": "^4.3.1",
+    "react-oauth-popup": "^1.0.5",
     "react-redux": "^7.2.6",
     "react-router": "^6.2.1",
     "react-router-dom": "^6.2.1",
-    "sass": "^1.49.9"
+    "sass": "^1.49.9",
+    "url-regex": "^5.0.0"
   },
   "devDependencies": {
     "@types/react": "^17.0.33",

@@ -5,6 +5,7 @@ import Layout from './layout/Layout'
 import Dashboard from './pages/dashboard/Dashboard'
 import Projects from './pages/dashboard/Projects'
 import ProjectInfo from "./pages/dashboard/ProjectInfo"
+import FormInfo from './pages/dashboard/FormInfo'
 
 function App() {
   return (
@@ -14,7 +15,8 @@ function App() {
           <Routes>
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/projects" element={<Projects />} />
-            <Route path="/projects" element={<ProjectInfo />} />
+            <Route path="/projects/:projectID" element={<ProjectInfo />} />
+            <Route path="/forms/:formID" element={<FormInfo />} />
           </Routes>
         </Layout>
       </Router>
