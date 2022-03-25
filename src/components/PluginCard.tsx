@@ -1,26 +1,65 @@
-import { Box,Button,Grid,Text } from '@mantine/core';
-import React, { useState } from 'react'
+import { Box,Button,Grid,Select,Text } from '@mantine/core';
+import React, { useRef, useState } from 'react'
 import { useNavigate } from 'react-router';
 import OauthPopup from "react-oauth-popup";
+import axios from "axios";
+import { useModals } from '@mantine/modals';
 import "../styles/components.scss"
+import { useToast } from '@chakra-ui/react';
 
 type PluginCardProps = {
   icon: string;
   name: String;
   description: String;
+  formID: string;
+  callback: Function;
+  activated: boolean;
 }
 
 
-const PluginCard: React.FC<PluginCardProps> = ({ icon, name,description }) => {
+const PluginCard: React.FC<PluginCardProps> = ({ icon, name,description,formID,callback,activated }) => {
+
   const [active, setActive] = useState(false);
-  const navigate = useNavigate();
-  const onCode = (code) => {
-    console.log("🚀 ~ file: PluginCard.tsx ~ line 18 ~ onCode ~ code", code)
-  }
-  
-  const onAuthCode = (code) => {
-    return
-  }
+  const [documentId, setDocumentID] = useState<string>();
+  const modals = useModals();
+  const toast = useToast();
+  const onAuthCode = async (code:string) => {
+    try {
+      axios.get(`http://localhost:5000/plugin/google/code?code=${code}`)
+        .then(res => res.data)
+        .then(data => {
+        console.log("🚀 ~ file: PluginCard.tsx ~ line 31 ~ onAuthCode ~ data", data)
+          axios.post(`http://localhost:5000/plugin/add?formID=${formID}`, {
+            access_token: data.access_token,
+            refresh_toke:data.refresh_token,
+            name
+          }).then(() => {
+            axios.get(`http://localhost:5000/plugin/sheet/${formID}`).then(res => res.data)
+              .then(data => {
+                console.log(data)
+              modals.openConfirmModal({
+                title: 'Select A SpreadSheet',
+                children: (
+                  <Select  onChange={(value)=>setDocumentID(value)}  data={data.files.map((entry: ({ id: string; name:string})) => ({value:entry.id,label:entry.name}))} />
+                ),
+                labels: { confirm: 'Confirm', cancel: 'Cancel' },
+                onCancel: () => console.log('Cancel'),
+                onConfirm: () => {
+                  axios.put(`http://localhost:5000/plugin/sheet/${formID}`,{sheetID:documentId})
+                    .then(res => {
+                      modals.closeAll()
+                      toast({ title: "Plugin Successfully Added", status: "success" })
+                      callback();
+                    });
+                },
+              });
+            })
+          });
+        })     
+    } catch (e) {
+      console.error(e);
+    }
+};
 
   return (
     <Box
@@ -31,6 +70,7 @@ const PluginCard: React.FC<PluginCardProps> = ({ icon, name,description }) => {
             ? `3px solid ${theme.colors[theme.primaryColor][5]}`
             : '2px solid #868e96'
         }`,
+        transition: '1s',
         '&:hover': {
           borderColor: theme.colors[theme.primaryColor][5],
         },
@@ -54,13 +94,24 @@ const PluginCard: React.FC<PluginCardProps> = ({ icon, name,description }) => {
           margin: '1rem auto',
         }}
       >
-        <OauthPopup
-          url="https://slack.com/oauth/v2/authorize?scope=incoming-webhook,commands&client_id=1426926653554.3223730928486"
-          onCode={onAuthCode}
-          onClose={()=>console.log("Consol")}
-        >
-          <Button>Authorize</Button>
-        </OauthPopup>
+        {activated ? (
+          <>
+            <Button >
+              Revoke
+            </Button>
+          </>
+        ) : (
+          <>
+            <OauthPopup
+              url="https://accounts.google.com/o/oauth2/v2/auth?access_type=offline&prompt=consent&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fspreadsheets%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fdrive%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fspreadsheets&state=formID&response_type=code&client_id=825212325994-r4tngsvhg637e1kkkot7uin9jphd6plg.apps.googleusercontent.com&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Fgoogle%2Fredirect"
+              onCode={onAuthCode}
+            >
+              <Button>
+                Authorize
+              </Button>
+            </OauthPopup>
+          </>
+        )}
       </div>
     </Box>
   );

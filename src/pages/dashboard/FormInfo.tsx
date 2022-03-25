@@ -15,28 +15,40 @@ import { BiData } from 'react-icons/bi';
 import { FaWpforms } from 'react-icons/fa';
 import { FiSettings } from 'react-icons/fi';
 import { RiDashboard3Line } from 'react-icons/ri';
+import { useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
+import EntryTable from '../../components/EntryTable';
+import FormDashboard from '../../components/FormDashboard';
+import FormSetting from '../../components/FormSetting';
 import Header from '../../components/Header';
+import { useGetFormByIDQuery } from '../../redux/api/form';
+import { RootState } from '../../redux/store';
 
 function FormInfo() {
+  const { formID } = useParams();
+  const project = useSelector((state: RootState) => state.route.currentProject);
+  const { data, refetch } = useGetFormByIDQuery(formID);
   return (
     <div>
-      <Header title="Form" />
+      <Header link={{text:project?.name,id:project?.id}} title={data?.data[0].name} />
       <Tabs mx={15} mt={30}>
         <Tabs.Tab
           style={{ padding: '0 3rem' }}
           icon={<RiDashboard3Line />}
           label="Dashboard"
-        ></Tabs.Tab>
-        <Tabs.Tab
-          style={{ padding: '0 3rem' }}
-          icon={<BiData />}
-          label="Data"
-        ></Tabs.Tab>
+        >
+          <FormDashboard formID={formID} />
+        </Tabs.Tab>
+        <Tabs.Tab style={{ padding: '0 3rem' }} icon={<BiData />} label="Data">
+          <EntryTable formID={formID} />
+        </Tabs.Tab>
         <Tabs.Tab
           style={{ padding: '0 3rem' }}
           icon={<FiSettings />}
           label="Settings"
-        ></Tabs.Tab>
+        >
+          <FormSetting formID={formID} formObj={data} refetch={refetch} />
+        </Tabs.Tab>
       </Tabs>
     </div>
   );

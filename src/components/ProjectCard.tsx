@@ -18,7 +18,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ id, name, description }) => {
     <Card
       onClick={() => {
         console.log("🚀 ~ file: ProjectCard.tsx ~ line 20 ~ id", id)
-        dispatch(setCurrentProject(id))
+        dispatch(setCurrentProject({id,name}))
         navigate(`${id}`)
       }}
       style={{
@@ -28,7 +28,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ id, name, description }) => {
         height: "260px",
         maxHeight: "260px",
         minHeight:"260px",
-        width:"360px"
+        width:"300px"
       }}
       shadow="md"
       sx={(theme) => ({

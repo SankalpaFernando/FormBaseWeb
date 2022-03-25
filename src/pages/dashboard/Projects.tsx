@@ -17,14 +17,6 @@ const Projects: React.FC = () => {
   return (
     <div>
       <Header title="Projects" />
-      <OauthPopup
-        url="https://slack.com/oauth/v2/authorize?scope=incoming-webhook,commands&client_id=1426926653554.3223730928486"
-        onCode={(code)=>console.log(code)}
-        onClose={() => console.log('Consol')}
-      >
-        <div>Click me to open a Popup</div>
-      </OauthPopup>
-
       <Grid>
         <Button
           style={{}}
@@ -42,7 +34,7 @@ const Projects: React.FC = () => {
       </Grid>
       <Grid>
         {data?.docs?.map(({ _id, name, description }) => (
-          <Grid.Col xl={3}>
+          <Grid.Col xl={3} lg={4} md={4} sm={6}>
             <ProjectCard id={_id} name={name} description={description} />
           </Grid.Col>
         ))}

@@ -26,12 +26,15 @@ const ProjectInfo: React.FC = () => {
   const [page, setPage] = useState(1);
   const { data:formsData, isLoading,refetch:formRefetch } = useGetFormsByProjectIDQuery({projectID,page});
   const { data: projectData, refetch:projectRefetch } = useGetProjectByIDQuery(projectID);
-  const toast = useToast();
   
   const onSuccessCallback = () => {
     setOpen(true);
     formRefetch();
   }
+
+  useEffect(() => {
+    formRefetch()
+  },[])
 
 
   return (
@@ -63,7 +66,7 @@ const ProjectInfo: React.FC = () => {
           </Grid>
           <Grid>
             {formsData?.docs?.map(({ _id, name, description }) => (
-              <Grid.Col xl={3}>
+              <Grid.Col xl={3} lg={6}>
                 <FormCard id={_id} name={name} description={description} />
               </Grid.Col>
             ))}

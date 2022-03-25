@@ -14,6 +14,7 @@ import { DiDatabase } from "react-icons/di"
 import { GiServerRack } from "react-icons/gi"
 import { AiOutlineFundProjectionScreen } from 'react-icons/ai';
 import { useGetDataSetInfoQuery, useGetFormInfoQuery, useGetProjectInfoQuery } from '../redux/api/info';
+import StatCard from './StatCard';
 
 const Stats: React.FC = () => {
   const { data:dataSet, isLoading:isDataSetLoading } = useGetDataSetInfoQuery({});
@@ -23,67 +24,30 @@ const Stats: React.FC = () => {
   return (
     <Grid>
       <Grid.Col xs={6} md={6} lg={3}>
-        <StatsCard
+        <StatCard
           label="Projects"
           stats={projects?.data?.projectCount}
           Icon={AiOutlineFundProjectionScreen}
         />
       </Grid.Col>
       <Grid.Col xs={6} md={6} lg={3}>
-        <StatsCard
+        <StatCard
           label="Forms"
           stats={forms?.data?.formCount}
           Icon={ClipboardIcon}
         />
       </Grid.Col>
       <Grid.Col xs={6} md={6} lg={3}>
-        <StatsCard
+        <StatCard
           label="Datasets"
           stats={dataSet?.data?.dataSetCount}
           Icon={DiDatabase}
         />
       </Grid.Col>
       <Grid.Col xs={6} md={6} lg={3}>
-        <StatsCard label="Backups" stats="5" Icon={GiServerRack} />
+        <StatCard label="Backups" stats="5" Icon={GiServerRack} />
       </Grid.Col>
     </Grid>
-  );
-}
-
-type StatsCardProps = {
-  label: string;
-  stats: string;
-  Icon: React.FC;
-}
-
-const StatsCard: React.FC<StatsCardProps> = ({label,stats,Icon}) => {
-  return (
-    <Card style={{ width: '100%',margin:"auto"}} shadow="xl" padding="xl" radius="lg">
-      <div style={{display:"grid",gridTemplateColumns:"1fr 2fr"}}>
-        <div>
-          <Text
-            align="left"
-            style={{ fontSize: '1.4rem', fontFamily: 'Fredoka' }}
-          >
-            {label}
-          </Text>
-          <Text
-            align="left"
-            style={{ fontSize: '2.4rem', lineHeight: '2.4rem' }}
-          >
-            {stats}
-          </Text>
-        </div>
-        <div style={{ display: 'flex', justifyContent: 'right' }}>
-          <ThemeIcon
-            variant="light"
-            style={{ width: 80, height: 80, borderRadius: '50%' }}
-          >
-            <Icon width={40} height={40} style={{fontSize:"3rem"}} />
-          </ThemeIcon>
-        </div>
-      </div>
-    </Card>
   );
 }
 

@@ -5,7 +5,8 @@ import Layout from './layout/Layout'
 import Dashboard from './pages/dashboard/Dashboard'
 import Projects from './pages/dashboard/Projects'
 import ProjectInfo from "./pages/dashboard/ProjectInfo"
-import FormInfo from './pages/dashboard/FormInfo'
+import FormInfo from './pages/dashboard/FormInfo';
+import Redirect from './components/Redirect';
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
             <Route path="/projects" element={<Projects />} />
             <Route path="/projects/:projectID" element={<ProjectInfo />} />
             <Route path="/forms/:formID" element={<FormInfo />} />
+            <Route path="/google/redirect/:code" element={<Redirect />} />
           </Routes>
         </Layout>
       </Router>

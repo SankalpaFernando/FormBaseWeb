@@ -12,12 +12,10 @@ type FormCardProps = {
 
 const FormCard: React.FC<FormCardProps> = ({ id, name, description }) => {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
   return (
     <Card
       onClick={() => {
-        dispatch(setCurrentProject(id));
-        navigate(`${id}`);
+        navigate(`/forms/${id}`);
       }}
       style={{
         margin: '1rem auto',

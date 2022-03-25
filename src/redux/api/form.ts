@@ -30,7 +30,7 @@ export const formAPI = createApi({
       GetFormByIDProps,
       { projectID: string; page: number }
     >({
-      query: ({ projectID, page }) => `/form/${projectID}?page=${page}`,
+      query: ({ projectID, page }) => `/form/project/${projectID}?page=${page}`,
     }),
     addForm: builder.mutation({
       query: (body) => ({
@@ -39,9 +39,79 @@ export const formAPI = createApi({
         body,
       }),
     }),
+    addWebhook: builder.mutation({
+      query: ({ formID, body }) => ({
+        url: `/webhook/${formID}`,
+        method: 'POST',
+        body,
+      }),
+    }),
+    deleteWebhook: builder.mutation({
+      query: ({ formID, webhookID }) => ({
+        url: `/webhook/${formID}/${webhookID}`,
+        method: 'DELETE',
+      }),
+    }),
+    updateWebhook: builder.mutation({
+      query: ({ formID, webhookID,body }) => ({
+        url: `/webhook/${formID}/${webhookID}`,
+        method: 'PUT',
+        body
+      }),
+    }),
+    getFormLogs: builder.query({ query: (formID) => `/logs/latest/${formID}` }),
+    getFormStats: builder.query({ query: (formID) => `/logs/stats/${formID}` }),
+    getFormCharts: builder.query({
+      query: (formID) => `/logs/charts/${formID}`,
+    }),
+    getEntries: builder.query({
+      query: ({ formID, page }) => `/entry/${formID}?page=${page}`,
+    }),
+    getFormByID: builder.query({ query: (formID) => `/form/${formID}` }),
+    updateForm: builder.mutation({
+      query: ({ formID, body }) => ({
+        url: `/form/${formID}`,
+        method: 'PUT',
+        body,
+      }),
+    }),
+    deleteEntryBulk: builder.mutation({
+      query: (body) => ({
+        url: `/entry`,
+        method: "Delete",
+        body
+      })
+    }),
+    deleteAll: builder.mutation({
+      query: ({formID}) => ({
+        url:`/entry/all/${formID}`,
+        method:"Delete"
+      })
+    }),
+    deleteForm: builder.mutation({
+      query: ({ formID }) => ({
+        url: `/form/${formID}`,
+        method:"Delete"
+      })
+    })
   }),
 });
 
 
-export const { useGetFormsByProjectIDQuery, useAddFormMutation } = formAPI;
+export const {
+  useGetFormsByProjectIDQuery,
+  useAddFormMutation,
+  useGetFormLogsQuery,
+  useGetFormStatsQuery,
+  useGetFormChartsQuery,
+  useGetEntriesQuery,
+  useGetFormByIDQuery,
+  useUpdateFormMutation,
+  useAddWebhookMutation,
+  useDeleteWebhookMutation,
+  useUpdateWebhookMutation,
+  useDeleteEntryBulkMutation,
+  useDeleteAllMutation,
+  useDeleteFormMutation
+} = formAPI;
 export default formAPI.reducer;

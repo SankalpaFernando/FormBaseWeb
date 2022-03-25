@@ -14,6 +14,7 @@ import "../styles/components.scss"
 import PluginCard from './PluginCard';
 import { isEmpty } from 'lodash';
 import { useAddFormMutation } from '../redux/api/form';
+import { useToast } from '@chakra-ui/react';
 
 type NewFormProps = {
   projectID: string | undefined;
@@ -49,12 +50,13 @@ const NewForm: React.FC<NewFormProps> = ({ projectID, onSuccessCallback }) => {
           : null,
     },
   });
+  const toast = useToast();
     useEffect(() => {
       if (isSuccess) {
-        // toast({
-        //   title: 'New Project Added',
-        //   status: 'success',
-        // });
+        toast({
+          title: 'New Project Added',
+          status: 'success',
+        });
         form.reset();
         onSuccessCallback();
       }

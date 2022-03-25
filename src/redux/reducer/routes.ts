@@ -1,22 +1,27 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
+type currentProjectType = { id: string; name: string };
+
 type initialStateProp = {
-  currentProjectID: null | string;
+  currentProject: null | currentProjectType;
+  currentFormID: null | string;
 }
 
-
 const initialState:initialStateProp = {
-  currentProjectID: null
+  currentProject: null,
+  currentFormID: null
+
 }
 
 export const routeSlice = createSlice({
   name: "routes",
   initialState,
   reducers: {
-    setCurrentProject:(state,action:PayloadAction<string>)=> {state.currentProjectID=action.payload}
+    setCurrentProject: (state, action: PayloadAction<currentProjectType>) => { state.currentProject = action.payload },
+    setCurrentForm: (state,action: PayloadAction<string>) => { state.currentFormID = action.payload}
   }
 })
 
 
-export const { setCurrentProject } = routeSlice.actions;
+export const { setCurrentProject,setCurrentForm } = routeSlice.actions;
 export default routeSlice.reducer;
