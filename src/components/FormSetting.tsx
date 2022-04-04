@@ -8,12 +8,15 @@ import {
   InputWrapper,
   Modal,
   Pagination,
+  Select,
   SimpleGrid,
+  Switch,
   Table,
   Tabs,
   Text,
   Textarea,
 } from '@mantine/core';
+import { useClipboard} from "@mantine/hooks"
 import React, { useEffect, useState, KeyboardEvent } from 'react';
 import { GoPlus } from 'react-icons/go';
 import { FiSearch, FiSettings } from 'react-icons/fi';
@@ -40,6 +43,7 @@ import { BsFillPencilFill, BsFillTrashFill } from 'react-icons/bs';
 import { useDeleteAllMutation, useDeleteFormMutation, useDeleteWebhookMutation, useUpdateFormMutation } from '../redux/api/form';
 import { Cross1Icon } from '@modulz/radix-icons';
 import { formObjectType } from '../utils/customTypes';
+import { useGetAllTemplateQuery } from '../redux/api/template';
 
 type FormSettingProps = {
   formID: string;
@@ -53,8 +57,10 @@ const FormSetting: React.FC<FormSettingProps> = ({ formID, formObj, refetch }) =
   const [deleteAllEntries, { isSuccess: isDeleteAllSuccess, isLoading: isDeleteAllLoading }] = useDeleteAllMutation();
   const [dialogType,setDialogType] = useState("clear");
   const [deleteForm, { isSuccess: isDeleteFormSuccess, isLoading: isDeleteFormLoading }] = useDeleteFormMutation();
+  const { data: templates, isLoading: isTemplateLoading } = useGetAllTemplateQuery({});
   const navigate = useNavigate();
   const toast = useToast();
+  const clipboard = useClipboard({timeout:1000});
 
   const onDetailSubmit = () => {
     if (!form.validate().hasErrors) {
@@ -64,6 +70,7 @@ const FormSetting: React.FC<FormSettingProps> = ({ formID, formObj, refetch }) =
 
   useEffect(() => {
     if (formObj) {
+      console.log("🚀 ~ file: FormSetting.tsx ~ line 73 ~ useEffect ~ formObj", formObj)
       form.setValues({ ...formObj.data[0] });
     }
   }, [formObj]);
@@ -94,7 +101,15 @@ const FormSetting: React.FC<FormSettingProps> = ({ formID, formObj, refetch }) =
     }
 },[isDeleteAllSuccess,isDeleteFormSuccess])  
   const form = useForm({
-    initialValues: { name: '', description: '', origins: [], redirectURL: '' },
+    initialValues: {
+      name: '',
+      description: '',
+      origins: [],
+      redirectURL: '',
+      accessToken: '',
+      templateID: '',
+      enableEmailNotification:false,
+    },
     validate: {
       name: (value: string) =>
         value.length < 5
@@ -141,7 +156,7 @@ const FormSetting: React.FC<FormSettingProps> = ({ formID, formObj, refetch }) =
               style={{ textAlign: 'left' }}
               id="projectName"
               label="Form Name"
-              description="Please Select Plugins to Configure with Project"
+              description="Please Enter Form Name"
             >
               <Input id="projectName" {...form.getInputProps('name')} />
             </InputWrapper>
@@ -150,7 +165,7 @@ const FormSetting: React.FC<FormSettingProps> = ({ formID, formObj, refetch }) =
               mt={10}
               id="projectDescription"
               label="Form Description"
-              description="Please Select Plugins to Configure with Project"
+              description="Please Enter Form Description"
             >
               <Textarea
                 id="projectDescription"
@@ -161,8 +176,85 @@ const FormSetting: React.FC<FormSettingProps> = ({ formID, formObj, refetch }) =
               style={{ textAlign: 'left' }}
               id="projectName"
               mt={10}
+              label="Access Token"
+              description="Copy the Access Token"
+            >
+              <Input
+                readOnly
+                id="projectName"
+                {...form.getInputProps('accessToken')}
+                rightSection={
+                  <div>
+                    <Badge
+                      size="lg"
+                      mr={40}
+                      onClick={() => clipboard.copy(form.values.accessToken)}
+                    >
+                      {clipboard.copied ? 'Copied' : 'Copy'}
+                    </Badge>
+                  </div>
+                }
+              />
+            </InputWrapper>
+            <Switch
+              label="Enable Email Confirmation"
+              // onChange={(event) =>
+              // setEmailEnable(event.currentTarget.checked)
+              // }
+              checked={form.getInputProps('enableEmailNotification').value}
+              onChange={(e) =>
+                form
+                  .getInputProps('enableEmailNotification')
+                  .onChange(e.target.checked)
+              }
+              mt={20}
+              mb={20}
+            />
+            <InputWrapper
+              id="templateID"
+              // required={emailEnable}
+              style={{ textAlign: 'left' }}
+              mt={10}
+              label="Template"
+              description="Please Select Suitable Email Template to Send in Response to the Data Submission"
+            >
+              <Select
+                id="templateID"
+                searchable
+                disabled={!form.values.enableEmailNotification}
+                data={
+                  isTemplateLoading
+                    ? []
+                    : [
+                        ...templates.data.user_templates.map(
+                          ({ name: label, _id: value }) => ({
+                            label,
+                            value,
+                            group: 'User Templates',
+                          })
+                        ),
+                        ,
+                        ...templates.data.default_templates.map(
+                          ({ name: label, _id: value }) => ({
+                            label,
+                            value,
+                            group: 'Default Templates',
+                          })
+                        ),
+                      ]
+                }
+                allowDeselect
+                clearable
+                value={form.getInputProps('templateID').value}
+                onChange={form.getInputProps('templateID').onChange}
+              ></Select>
+            </InputWrapper>
+            <InputWrapper
+              style={{ textAlign: 'left' }}
+              id="projectName"
+              mt={10}
               label="Allowed Origins"
-              description="Please Select Plugins to Configure with Project"
+              description="Please Enter the Origins that are allowed"
               error={form.errors.origins}
             >
               <Input
@@ -214,7 +306,7 @@ const FormSetting: React.FC<FormSettingProps> = ({ formID, formObj, refetch }) =
               mt={10}
               id="projectName"
               label="Redirect URL"
-              description="Please Select Plugins to Configure with Project"
+              description="Please Enter URL to Redirect After Successful Submit"
               error={form.errors.redirectURL}
             >
               <Input id="projectName" {...form.getInputProps('redirectURL')} />
@@ -312,9 +404,13 @@ const FormSetting: React.FC<FormSettingProps> = ({ formID, formObj, refetch }) =
         size="sm"
         opened={dialogOpen}
         onClose={() => setDialogOpen(false)}
-        title={dialogType==="clear"?"Clear the Entries":"Delete the Form"}
+        title={dialogType === 'clear' ? 'Clear the Entries' : 'Delete the Form'}
       >
-        <Text>{dialogType==="clear"?"Do you want to remove all the data in the form ?":"Do you want to delete the form ?"}</Text>
+        <Text>
+          {dialogType === 'clear'
+            ? 'Do you want to remove all the data in the form ?'
+            : 'Do you want to delete the form ?'}
+        </Text>
         <div
           style={{
             display: 'flex',
@@ -323,7 +419,10 @@ const FormSetting: React.FC<FormSettingProps> = ({ formID, formObj, refetch }) =
           }}
         >
           <Button color="red" onClick={onDeleteAll}>
-            Yes, {dialogType==="clear"?"Clear the Form Entries":"Delete the Form"}
+            Yes,{' '}
+            {dialogType === 'clear'
+              ? 'Clear the Form Entries'
+              : 'Delete the Form'}
           </Button>
         </div>
       </Modal>

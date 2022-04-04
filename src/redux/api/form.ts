@@ -93,7 +93,8 @@ export const formAPI = createApi({
         url: `/form/${formID}`,
         method:"Delete"
       })
-    })
+    }),
+    getAllForms: builder.query({query:()=>`/form/all`})
   }),
 });
 
@@ -112,6 +113,7 @@ export const {
   useUpdateWebhookMutation,
   useDeleteEntryBulkMutation,
   useDeleteAllMutation,
-  useDeleteFormMutation
+  useDeleteFormMutation,
+  useGetAllFormsQuery
 } = formAPI;
 export default formAPI.reducer;

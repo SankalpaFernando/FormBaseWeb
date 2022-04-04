@@ -1,13 +1,13 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
 export const projectAPI = createApi({
-  reducerPath: 'infoAPI',
+  reducerPath: 'projectAPI',
   baseQuery: fetchBaseQuery({
     baseUrl: 'http://localhost:5000',
     credentials: 'include',
   }),
   endpoints: (builder) => ({
-    getProjects: builder.query({ query: () => '/project' }),
+    getProjects: builder.query({ query: (page) => `/project?page=${page}` }),
     getProjectByID: builder.query({query:(projectID)=>`/project/${projectID}`}),
     updateProject: builder.mutation({
       query: (body) => ({
@@ -22,6 +22,18 @@ export const projectAPI = createApi({
         method: "POST",
         body
       })
+    }),
+    deleteAllForms: builder.mutation({
+      query: ({ projectID }) => ({
+        url: `/project/all/${projectID}`,
+        method:"Delete"
+      })
+    }),
+    deleteProject: builder.mutation({
+      query: ({ projectID }) => ({
+        url: `/project/${projectID}`,
+        method:"Delete"
+      })
     })
   }),
 });
@@ -31,4 +43,6 @@ export const {
   useGetProjectByIDQuery,
   useAddPostMutation,
   useUpdateProjectMutation,
+  useDeleteAllFormsMutation,
+  useDeleteProjectMutation
 } = projectAPI;

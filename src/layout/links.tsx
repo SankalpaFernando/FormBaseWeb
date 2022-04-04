@@ -3,9 +3,7 @@ import { ArchiveIcon, BarChartIcon, ClipboardIcon, DashboardIcon, FileTextIcon, 
 const links = [
   { label: 'Dashboard', icon: DashboardIcon, href: '/dashboard' },
   { label: 'Projects', icon: LayersIcon, href: '/projects' },
-  { label: 'Forms', icon: ClipboardIcon, href: '/forms' },
-  { label: 'Analytics', icon: BarChartIcon, href: '/analytics' },
-  { label: 'Backups', icon: ArchiveIcon, href: '/backups' },
+  { label: 'Templates', icon: ClipboardIcon, href: '/templates' },
   { label: 'Docs', icon: FileTextIcon, href: '/docs' },
 ];
 

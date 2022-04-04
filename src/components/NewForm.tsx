@@ -15,6 +15,10 @@ import PluginCard from './PluginCard';
 import { isEmpty } from 'lodash';
 import { useAddFormMutation } from '../redux/api/form';
 import { useToast } from '@chakra-ui/react';
+import { useGetAllTemplateQuery } from '../redux/api/template';
+import { FaGoogle } from 'react-icons/fa';
+import OauthPopup from 'react-oauth-popup';
+import axios from 'axios';
 
 type NewFormProps = {
   projectID: string | undefined;
@@ -24,12 +28,18 @@ type NewFormProps = {
 
 const NewForm: React.FC<NewFormProps> = ({ projectID, onSuccessCallback }) => {
   const [active, setActive] = useState(0);
-  const [addForm, { isLoading,isSuccess }] = useAddFormMutation();
+  const [addForm, { isLoading, isSuccess }] = useAddFormMutation();
   const form = useForm({
     initialValues: {
       name: '',
       description: '',
+      templateID: "",
+      googleCode: {
+        access_token: "",
+        refresh_token:""
+      },
       origins: [],
+      enableEmailNotification: false,
       redirectURL: '',
       plugins: {},
     },
@@ -48,6 +58,7 @@ const NewForm: React.FC<NewFormProps> = ({ projectID, onSuccessCallback }) => {
         !(!isEmpty(value) && URLRegex().test(value))
           ? 'Redirect URL should be a valid URL'
           : null,
+      googleCode: ({ access_token, refresh_token}) =>  form.getInputProps("enableEmailNotification").value ? ( (isEmpty(access_token) || isEmpty(refresh_token)?"Need to Authenticate Google Email Service":null) ): null
     },
   });
   const toast = useToast();
@@ -66,10 +77,11 @@ const NewForm: React.FC<NewFormProps> = ({ projectID, onSuccessCallback }) => {
     const descriptionError =
       active === 0 && form.validateField('description').hasError;
     const originError = active === 1 && form.validateField('origins').hasError;
+    const authError = active === 0 && form.validateField("googleCode").hasError;
     const redirectURLError =
       active === 1 && form.validateField('redirectURL').hasError;
 
-    const formDetailHasError = nameError || descriptionError;
+    const formDetailHasError = nameError || descriptionError || authError;
     const formConfigurationHasError = originError || redirectURLError;
 
     if (!formDetailHasError && !formConfigurationHasError)
@@ -118,8 +130,21 @@ const NewForm: React.FC<NewFormProps> = ({ projectID, onSuccessCallback }) => {
   );
 };
 
-const FormDetails: React.FC<{form:any}> = ({ form }) => {
+const FormDetails: React.FC<{form:ReturnType<typeof useForm>}> = ({ form }) => {
   const [emailEnable, setEmailEnable] = useState(false);
+  const { data: templates, isLoading } = useGetAllTemplateQuery({});
+  const onAuthCode = async (code: string) => {
+    try {
+      axios
+        .get(`http://localhost:5000/plugin/google/code?code=${code}`)
+        .then((res) => {
+          const { access_token, refresh_token } = res.data;
+          form.setFieldValue("googleCode",{access_token,refresh_token})
+        })
+    } catch (e) {
+      console.error(e);
+    }
+  };
   return (
     <form>
       <Grid>
@@ -150,28 +175,63 @@ const FormDetails: React.FC<{form:any}> = ({ form }) => {
         <Grid.Col>
           <Switch
             label="Enable Email Confirmation"
-            onChange={(event) => setEmailEnable(event.currentTarget.checked)}
+            checked={form.getInputProps('enableEmailNotification').value}
+            onChange={(e) =>
+              form
+                .getInputProps('enableEmailNotification')
+                .onChange(e.target.checked)
+            }
           />
         </Grid.Col>
         <Grid.Col>
           <InputWrapper
             id="templateID"
-            required={emailEnable}
-            label="Email Template"
+            required={form.getInputProps('enableEmailNotification').value}
+            label="Template"
             description="Please Select Suitable Email Template to Send in Response to the Data Submission"
           >
             <Select
               id="templateID"
               searchable
-              disabled={!emailEnable}
-              data={[
-                { label: 'New Template', value: '10454' },
-                { label: 'Older', value: '1045' },
-                { label: 'Email', value: '1054' },
-              ]}
+              // disabled={!emailEnable}
+              data={
+                isLoading
+                  ? []
+                  : [
+                      ...templates.data.user_templates.map(
+                        ({ name: label, _id: value }) => ({
+                          label,
+                          value,
+                          group: 'User Templates',
+                        })
+                      ),
+                      ,
+                      ...templates.data.default_templates.map(
+                        ({ name: label, _id: value }) => ({
+                          label,
+                          value,
+                          group: 'Default Templates',
+                        })
+                      ),
+                    ]
+              }
+              {...form.getInputProps('templateID')}
             ></Select>
           </InputWrapper>
         </Grid.Col>
+        <OauthPopup
+          url="https://accounts.google.com/o/oauth2/v2/auth?access_type=offline&prompt=consent&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fgmail.send%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email&state=formID&response_type=code&client_id=825212325994-r4tngsvhg637e1kkkot7uin9jphd6plg.apps.googleusercontent.com&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Fgoogle%2Fredirect"
+          onCode={onAuthCode}
+        >
+          <Button leftIcon={<FaGoogle />} variant="light">
+            Authenticate Google
+          </Button>
+        </OauthPopup>
+
+        <Grid.Col></Grid.Col>
+        <Text ml={10} color="red" size="sm">
+          {form.errors.googleCode}
+        </Text>
       </Grid>
     </form>
   );

@@ -5,6 +5,7 @@ type webhookType = {
   url: string;
   id: string;
   tokenType: string;
+  enableEmailNotification: boolean
 };
 
 export type formObjectType = {

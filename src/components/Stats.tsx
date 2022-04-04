@@ -13,13 +13,14 @@ import {
 import { DiDatabase } from "react-icons/di"
 import { GiServerRack } from "react-icons/gi"
 import { AiOutlineFundProjectionScreen } from 'react-icons/ai';
-import { useGetDataSetInfoQuery, useGetFormInfoQuery, useGetProjectInfoQuery } from '../redux/api/info';
+import { useGetDataSetInfoQuery, useGetFormInfoQuery, useGetProjectInfoQuery, useGetTemplateInfoQuery } from '../redux/api/info';
 import StatCard from './StatCard';
 
 const Stats: React.FC = () => {
   const { data:dataSet, isLoading:isDataSetLoading } = useGetDataSetInfoQuery({});
   const { data:forms, isLoading:isFormsLoading } = useGetFormInfoQuery({});
-  const { data:projects, isLoading:isProjectsLoading } = useGetProjectInfoQuery({});
+  const { data: projects, isLoading: isProjectsLoading } = useGetProjectInfoQuery({});
+  const { data: templates, isLoading: isTemplatesLoading } = useGetTemplateInfoQuery({});
 
   return (
     <Grid>
@@ -45,7 +46,7 @@ const Stats: React.FC = () => {
         />
       </Grid.Col>
       <Grid.Col xs={6} md={6} lg={3}>
-        <StatCard label="Backups" stats="5" Icon={GiServerRack} />
+        <StatCard label="Templates" stats={templates?.data?.count} Icon={GiServerRack} />
       </Grid.Col>
     </Grid>
   );

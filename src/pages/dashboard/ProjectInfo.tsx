@@ -28,7 +28,7 @@ const ProjectInfo: React.FC = () => {
   const { data: projectData, refetch:projectRefetch } = useGetProjectByIDQuery(projectID);
   
   const onSuccessCallback = () => {
-    setOpen(true);
+    setOpen(false);
     formRefetch();
   }
 
@@ -93,6 +93,7 @@ const ProjectInfo: React.FC = () => {
           <ProjectSetting
             project={projectData?.data[0]}
             projectRefetch={projectRefetch}
+            formRefetch={formRefetch}
           />
         </Tabs.Tab>
       </Tabs>

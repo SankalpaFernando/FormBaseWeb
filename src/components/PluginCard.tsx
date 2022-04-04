@@ -24,6 +24,7 @@ const PluginCard: React.FC<PluginCardProps> = ({ icon, name,description,formID,c
   const modals = useModals();
   const toast = useToast();
   const onAuthCode = async (code:string) => {
+  console.log("🚀 ~ file: PluginCard.tsx ~ line 27 ~ onAuthCode ~ code", code)
     try {
       axios.get(`http://localhost:5000/plugin/google/code?code=${code}`)
         .then(res => res.data)

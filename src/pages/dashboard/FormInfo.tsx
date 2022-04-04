@@ -30,7 +30,10 @@ function FormInfo() {
   const { data, refetch } = useGetFormByIDQuery(formID);
   return (
     <div>
-      <Header link={{text:project?.name,id:project?.id}} title={data?.data[0].name} />
+      <Header
+        link={{ text: project?.name, id: project?.id }}
+        title={data?.data[0].name}
+      />
       <Tabs mx={15} mt={30}>
         <Tabs.Tab
           style={{ padding: '0 3rem' }}

@@ -10,7 +10,8 @@ export const infoAPI = createApi({
     getDataSetInfo: builder.query({ query: () => '/count/dataset' }),
     getFormInfo: builder.query({ query: () => '/count/form' }),
     getProjectInfo: builder.query({ query: () => '/count/project' }),
+    getTemplateInfo: builder.query({query:()=> `/count/template`})
   }),
 });
 
-export const { useGetProjectInfoQuery,useGetDataSetInfoQuery,useGetFormInfoQuery } = infoAPI;
+export const { useGetProjectInfoQuery,useGetDataSetInfoQuery,useGetFormInfoQuery,useGetTemplateInfoQuery } = infoAPI;

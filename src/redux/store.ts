@@ -6,14 +6,18 @@ import { projectAPI } from "./api/project";
 import routeReducer from "./reducer/routes";
 import storage from 'redux-persist/lib/storage';
 import { persistReducer } from "redux-persist";
+import { templateAPI } from "./api/template";
+import { rtkQueryErrorLogger } from "./middleware/ErrorHandler";
 
 export const store = configureStore({
   reducer: {
     [infoAPI.reducerPath]: infoAPI.reducer,
     [projectAPI.reducerPath]: projectAPI.reducer,
     [formAPI.reducerPath]: formAPI.reducer,
-    route: persistReducer({key:"root",storage},routeReducer),
+    [templateAPI.reducerPath]: templateAPI.reducer,
+    route: persistReducer({ key: 'root', storage }, routeReducer),
   },
+  middleware: (getDefault) => getDefault().concat(rtkQueryErrorLogger)
 });
 
 export type RootState = ReturnType<typeof store.getState>;
