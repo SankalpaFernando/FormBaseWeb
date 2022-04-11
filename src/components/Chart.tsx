@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { useEffect, useState } from 'react';
 import { Card,Text, useMantineTheme } from '@mantine/core';
 import { Line } from 'react-chartjs-2';

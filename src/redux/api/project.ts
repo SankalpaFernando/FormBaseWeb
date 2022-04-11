@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
 export const projectAPI = createApi({
@@ -46,5 +48,5 @@ export const {
   useAddPostMutation,
   useUpdateProjectMutation,
   useDeleteAllFormsMutation,
-  useDeleteProjectMutation
+  useDeleteProjectMutation,
 } = projectAPI;

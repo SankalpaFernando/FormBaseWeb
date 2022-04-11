@@ -1,30 +1,57 @@
-import { Table, TableCaption, Thead, Tbody,Td,Tr,Th,Tfoot } from '@chakra-ui/react';
-import { ActionIcon, Button, Checkbox, Grid, Input, InputWrapper, Modal, Pagination, Text, Textarea } from '@mantine/core';
+// @ts-nocheck
+
+import {
+  Table,
+  TableCaption,
+  Thead,
+  Tbody,
+  Td,
+  Tr,
+  Th,
+  Tfoot,
+} from '@chakra-ui/react';
+import {
+  ActionIcon,
+  Button,
+  Checkbox,
+  Grid,
+  Input,
+  InputWrapper,
+  Modal,
+  Pagination,
+  Text,
+  Textarea,
+} from '@mantine/core';
 import axios from 'axios';
 import { isEmpty, startCase } from 'lodash';
-import * as moment from "moment";
-import React, { useEffect, useState } from 'react'
+import * as moment from 'moment';
+import React, { useEffect, useState } from 'react';
 import { FaSearch } from 'react-icons/fa';
 import { IoMdArrowDropright, IoMdArrowDropdown } from 'react-icons/io';
 import { MdSavedSearch } from 'react-icons/md';
-import { useDeleteEntryBulkMutation, useGetEntriesQuery } from '../redux/api/form';
+import {
+  useDeleteEntryBulkMutation,
+  useGetEntriesQuery,
+} from '../redux/api/form';
 import fileDownload from 'js-file-download';
-
 
 type EntryTableDashboard = {
   formID: string;
-}
+};
 
-
-const EntryTable: React.FC<EntryTableDashboard> = ({formID}) => {
+const EntryTable: React.FC<EntryTableDashboard> = ({ formID }) => {
   const [page, setPage] = useState(1);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [open, setOpen] = useState(false);
-  const [deleteEntries,{isLoading,isSuccess}] = useDeleteEntryBulkMutation();
-  const [deleteIds,setDeleteIds] = useState<string[]>([])
-  const { data,refetch } = useGetEntriesQuery({ formID, page });
-  
-  const onDeleteCheck = async (_id: string, e: React.ChangeEvent<HTMLInputElement>) => {
+  const [deleteEntries, { isLoading, isSuccess }] =
+    useDeleteEntryBulkMutation();
+  const [deleteIds, setDeleteIds] = useState<string[]>([]);
+  const { data, refetch } = useGetEntriesQuery({ formID, page });
+
+  const onDeleteCheck = async (
+    _id: string,
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
     let tempIds = [...deleteIds];
     if (!e.target.checked) {
       tempIds = tempIds.filter((val: string) => val !== _id);
@@ -34,7 +61,7 @@ const EntryTable: React.FC<EntryTableDashboard> = ({formID}) => {
       }
     }
     setDeleteIds([...tempIds]);
-  }
+  };
 
   const onDownload = () => {
     axios(`${import.meta.env.VITE_API}/form/download/dataset/${formID}`, {
@@ -54,15 +81,15 @@ const EntryTable: React.FC<EntryTableDashboard> = ({formID}) => {
 
   useEffect(() => {
     if (isSuccess) {
-      refetch()
+      refetch();
     }
-  },[isSuccess])
+  }, [isSuccess]);
   const onDelete = () => {
     const body = { entryIDs: [...deleteIds] };
     deleteEntries(body);
     setDeleteIds([]);
     setDialogOpen(false);
-  }
+  };
   return (
     <div style={{ width: '70%', margin: '1rem auto' }}>
       <Modal size="sm" opened={dialogOpen} onClose={() => setDialogOpen(false)}>
@@ -105,9 +132,7 @@ const EntryTable: React.FC<EntryTableDashboard> = ({formID}) => {
                 gap: '1rem',
               }}
             >
-              <Button loading={isLoading}>
-                Send Email
-              </Button>
+              <Button loading={isLoading}>Send Email</Button>
             </div>
           </Grid.Col>
         </Grid>
@@ -144,12 +169,7 @@ const EntryTable: React.FC<EntryTableDashboard> = ({formID}) => {
           marginTop: '2rem',
         }}
       >
-        <Button
-          onClick={onDownload}
-          color="green"
-          variant="outline"
-          mr={10}
-        >
+        <Button onClick={onDownload} color="green" variant="outline" mr={10}>
           Download Dataset
         </Button>
         {!isEmpty(deleteIds) && (
@@ -182,7 +202,7 @@ const EntryTable: React.FC<EntryTableDashboard> = ({formID}) => {
       </div>
     </div>
   );
-}
+};
 
 type DetailCardProps = {
   data: Object;
@@ -190,7 +210,6 @@ type DetailCardProps = {
   deleteChecked: boolean;
   onDeleteCheck: Function;
 };
-
 
 const DetailCard: React.FC<DetailCardProps> = ({
   data,
@@ -214,7 +233,12 @@ const DetailCard: React.FC<DetailCardProps> = ({
             </ActionIcon>
           </Td>
           <Td>
-            <Checkbox checked={deleteChecked} onChange={(e:React.ChangeEvent<HTMLInputElement>) => onDeleteCheck(_id,e)} />
+            <Checkbox
+              checked={deleteChecked}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                onDeleteCheck(_id, e)
+              }
+            />
           </Td>
           <Td style={{ border: '2px solid #eee', borderLeft: '0' }}>
             {date.format('MMMM DD')}
@@ -260,4 +284,4 @@ const DetailCard: React.FC<DetailCardProps> = ({
   );
 };
 
-export default EntryTable
+export default EntryTable;

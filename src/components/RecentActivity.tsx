@@ -1,4 +1,6 @@
-import React from 'react'
+// @ts-nocheck
+
+import React from 'react';
 import {
   Table,
   Thead,
@@ -9,10 +11,21 @@ import {
   Td,
   TableCaption,
 } from '@chakra-ui/react';
-import { FaChrome, FaApple, FaWindows, FaSafari, FaFirefox, FaLinux, FaAndroid, FaInternetExplorer, FaEdge, FaOpera } from "react-icons/fa"
-import { SiBrave} from "react-icons/si"
+import {
+  FaChrome,
+  FaApple,
+  FaWindows,
+  FaSafari,
+  FaFirefox,
+  FaLinux,
+  FaAndroid,
+  FaInternetExplorer,
+  FaEdge,
+  FaOpera,
+} from 'react-icons/fa';
+import { SiBrave } from 'react-icons/si';
 import { Card, Pagination, Text, useMantineTheme } from '@mantine/core';
-import "../styles/components.scss";
+import '../styles/components.scss';
 import { useGetLatestLogQuery } from '../redux/api/info';
 import moment from 'moment';
 import { MdOutlineDisabledByDefault } from 'react-icons/md';
@@ -21,9 +34,7 @@ const RecentActivity: React.FC = () => {
   const theme = useMantineTheme();
   const color = theme.colors[theme.primaryColor.toString()][4];
 
-  const {data:recentActivities,isLoading } = useGetLatestLogQuery({});
-
-
+  const { data: recentActivities, isLoading } = useGetLatestLogQuery({});
 
   return (
     <Card shadow="xl" radius="lg" padding="xl">
@@ -49,7 +60,13 @@ const RecentActivity: React.FC = () => {
           <Tr>
             <Td></Td>
             <Td></Td>
-            <Td style={{ marginTop: '5rem', paddingTop: '3rem',paddingBottom:"3rem" }}>
+            <Td
+              style={{
+                marginTop: '5rem',
+                paddingTop: '3rem',
+                paddingBottom: '3rem',
+              }}
+            >
               <Text color="gray" style={{ textAlign: 'center' }}>
                 No Recent Activities Recorded
               </Text>
@@ -139,6 +156,6 @@ const RecentActivity: React.FC = () => {
       ></div>
     </Card>
   );
-}
+};
 
-export default RecentActivity
+export default RecentActivity;

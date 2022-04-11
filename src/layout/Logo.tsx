@@ -1,9 +1,11 @@
+// @ts-nocheck
+
 import { Group, Text, useMantineTheme } from '@mantine/core';
-import React from 'react'
+import React from 'react';
 
 const Logo: React.FC = () => {
   const theme = useMantineTheme();
-  
+
   return (
     <div
       style={{
@@ -35,6 +37,6 @@ const Logo: React.FC = () => {
       </Group>
     </div>
   );
-}
+};
 
-export default Logo
+export default Logo;

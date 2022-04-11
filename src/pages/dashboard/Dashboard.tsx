@@ -1,5 +1,7 @@
-import React, { useEffect } from 'react'
-import { Grid} from '@mantine/core'
+// @ts-nocheck
+
+import React, { useEffect } from 'react';
+import { Grid } from '@mantine/core';
 import Stats from '../../components/Stats';
 import Chart from '../../components/Chart';
 import RecentActivity from '../../components/RecentActivity';
@@ -10,7 +12,6 @@ import { useDispatch } from 'react-redux';
 import { isEmpty } from 'lodash';
 
 const Dashboard: React.FC = () => {
-  
   return (
     <div>
       <Header title={`Dashboard`} />
@@ -25,6 +26,6 @@ const Dashboard: React.FC = () => {
       </Grid>
     </div>
   );
-}
+};
 
-export default Dashboard;  
+export default Dashboard;

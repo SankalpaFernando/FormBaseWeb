@@ -1,4 +1,13 @@
-import { Badge, Button, Grid, Modal, Pagination, SimpleGrid } from '@mantine/core';
+// @ts-nocheck
+
+import {
+  Badge,
+  Button,
+  Grid,
+  Modal,
+  Pagination,
+  SimpleGrid,
+} from '@mantine/core';
 import React, { useEffect, useState } from 'react';
 import { GoPlus } from 'react-icons/go';
 import Header from '../../components/Header';
@@ -11,15 +20,15 @@ import { useGetTemplateQuery } from '../../redux/api/template';
 import TemplateCard from '../../components/TemplateCard';
 const Template: React.FC = () => {
   const [open, setOpen] = useState(false);
-  const [type, setType] = useState<"User" | "Default">("User");
+  const [type, setType] = useState<'User' | 'Default'>('User');
   const [page, setPage] = useState(1);
-  const { data, isLoading, refetch } = useGetTemplateQuery({type,page});
+  const { data, isLoading, refetch } = useGetTemplateQuery({ type, page });
   const onSuccessSubmit = () => {
     setOpen(false);
-    refetch({type:"User",page});
+    refetch({ type: 'User', page });
   };
   useEffect(() => {
-    refetch({type,page});
+    refetch({ type, page });
   }, [type]);
   return (
     <div>
@@ -80,7 +89,7 @@ const Template: React.FC = () => {
           style={{ flexWrap: 'nowrap', WebkitFlexWrap: 'nowrap' }}
           total={data?.totalPages}
           size="lg"
-          onChange={(page) =>setPage(page)}
+          onChange={(page) => setPage(page)}
         />
       </div>
     </div>

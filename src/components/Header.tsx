@@ -1,6 +1,8 @@
-import { Text,TypographyStylesProvider } from '@mantine/core';
+// @ts-nocheck
+
+import { Text, TypographyStylesProvider } from '@mantine/core';
 import { isUndefined } from 'lodash';
-import React from 'react'
+import React from 'react';
 import { useNavigate } from 'react-router';
 
 type HeaderProps = {
@@ -8,8 +10,8 @@ type HeaderProps = {
   link?: {
     text: string;
     id: string;
-  }
-}
+  };
+};
 
 const Header: React.FC<HeaderProps> = ({ title, link }) => {
   const navigate = useNavigate();
@@ -24,24 +26,26 @@ const Header: React.FC<HeaderProps> = ({ title, link }) => {
             gap: '.5rem',
           }}
         >
-          { !isUndefined(link) &&  <Text
-            style={{ fontSize: '24px' }}
-            size="xl"
-            sx={(theme) => ({
-              color: theme.colors[theme.primaryColor][8],
-              '&:hover': {
-                cursor: 'pointer',
-              },
-            })}
-            onClick={()=>navigate(`/projects/${link.id}`)}
-          >
-            {link?.text} /
-          </Text>}
+          {!isUndefined(link) && (
+            <Text
+              style={{ fontSize: '24px' }}
+              size="xl"
+              sx={(theme) => ({
+                color: theme.colors[theme.primaryColor][8],
+                '&:hover': {
+                  cursor: 'pointer',
+                },
+              })}
+              onClick={() => navigate(`/projects/${link.id}`)}
+            >
+              {link?.text} /
+            </Text>
+          )}
           <Text style={{ fontSize: '24px' }}> {title}</Text>
         </h2>
       </TypographyStylesProvider>
     </Text>
   );
-}
+};
 
-export default Header
+export default Header;

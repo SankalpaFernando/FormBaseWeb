@@ -1,32 +1,37 @@
-import { ActionIcon, Card, Grid, Group } from '@mantine/core'
-import React, { useRef } from 'react'
+// @ts-nocheck
+
+import { ActionIcon, Card, Grid, Group } from '@mantine/core';
+import React, { useRef } from 'react';
 import { DiDatabase } from 'react-icons/di';
 import { MdRefresh } from 'react-icons/md';
-import { useGetFormChartsQuery, useGetFormLogsQuery, useGetFormStatsQuery } from '../redux/api/form';
-import FormChart from './FormChart'
+import {
+  useGetFormChartsQuery,
+  useGetFormLogsQuery,
+  useGetFormStatsQuery,
+} from '../redux/api/form';
+import FormChart from './FormChart';
 import FormTimeline from './FormTimeline';
 import StatCard from './StatCard';
 
 type FormDashboardProps = {
   formID: string;
-}
+};
 
+const FormDashboard: React.FC<FormDashboardProps> = ({ formID }) => {
+  const { data, refetch: statsRefetch } = useGetFormStatsQuery(formID);
+  const { data: logs, refetch: logsRefetch } = useGetFormLogsQuery(formID);
+  const { data: charts, refetch: chartsRefetch } =
+    useGetFormChartsQuery(formID);
 
-const FormDashboard: React.FC<FormDashboardProps> = ({formID}) => {
-  const { data,refetch:statsRefetch } = useGetFormStatsQuery(formID);
-  const { data:logs, refetch:logsRefetch } = useGetFormLogsQuery(formID);
-  const { data:charts,refetch:chartsRefetch } = useGetFormChartsQuery(formID);
-
-  
   const onRefetch = () => {
     statsRefetch();
     logsRefetch();
     chartsRefetch();
-  }
-  
+  };
+
   return (
     <div>
-      <div style={{display:"flex",justifyContent:"right"}}>
+      <div style={{ display: 'flex', justifyContent: 'right' }}>
         <ActionIcon onClick={onRefetch} size="md">
           <MdRefresh />
         </ActionIcon>
@@ -68,6 +73,6 @@ const FormDashboard: React.FC<FormDashboardProps> = ({formID}) => {
       </Grid>
     </div>
   );
-}
+};
 
-export default FormDashboard
+export default FormDashboard;

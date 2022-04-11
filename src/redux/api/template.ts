@@ -1,5 +1,6 @@
+// @ts-nocheck
+
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-console.log("🚀 ~ file: template.ts ~ line 7 ~ import.meta.env.VITE_API", import.meta.env.VITE_API)
 
 export const templateAPI = createApi({
   reducerPath: 'templateAPI',
@@ -39,5 +40,5 @@ export const {
   useGetTemplateQuery,
   useUpdateTemplateMutation,
   useDeleteTemplateMutation,
-  useGetAllTemplateQuery
+  useGetAllTemplateQuery,
 } = templateAPI;

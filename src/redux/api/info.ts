@@ -1,4 +1,6 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react"
+// @ts-nocheck
+
+import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
 export const infoAPI = createApi({
   reducerPath: 'infoAPI',
@@ -16,4 +18,11 @@ export const infoAPI = createApi({
   }),
 });
 
-export const { useGetProjectInfoQuery,useGetDataSetInfoQuery,useGetFormInfoQuery,useGetTemplateInfoQuery,useGetLatestLogQuery,useGetTotalSubmitsQuery } = infoAPI;
+export const {
+  useGetProjectInfoQuery,
+  useGetDataSetInfoQuery,
+  useGetFormInfoQuery,
+  useGetTemplateInfoQuery,
+  useGetLatestLogQuery,
+  useGetTotalSubmitsQuery,
+} = infoAPI;

@@ -1,4 +1,6 @@
-import React,{useEffect, useState} from 'react';
+// @ts-nocheck
+
+import React, { useEffect, useState } from 'react';
 import { Card, Text, ActionIcon, useMantineTheme } from '@mantine/core';
 import { Line } from 'react-chartjs-2';
 import {
@@ -17,11 +19,9 @@ import { MdRefresh } from 'react-icons/md';
 
 type FormChartsProps = {
   data: Object;
-}
+};
 
-
-const FormChart: React.FC<FormChartsProps> = ({data}) => {
-
+const FormChart: React.FC<FormChartsProps> = ({ data }) => {
   const theme = useMantineTheme();
   const colorOne = theme.colors[theme.primaryColor.toString()][4];
   const colorTwo = theme.colors[theme.primaryColor.toString()][8];
@@ -33,13 +33,17 @@ const FormChart: React.FC<FormChartsProps> = ({data}) => {
     Title,
     Tooltip,
     Legend
-    );
-    const [chartData,setChartData]=useState({dates:[],reads:[],writes:[]})
+  );
+  const [chartData, setChartData] = useState({
+    dates: [],
+    reads: [],
+    writes: [],
+  });
   useEffect(() => {
-      const dates: string[] = [];
-      const reads: string[] = [];
-      const writes: string[] = [];
-      if (!isEmpty(data)) {
+    const dates: string[] = [];
+    const reads: string[] = [];
+    const writes: string[] = [];
+    if (!isEmpty(data)) {
       data?.data?.stats?.readCounts.forEach((entry: { _id: string }) =>
         dates.push(entry._id)
       );
@@ -69,14 +73,11 @@ const FormChart: React.FC<FormChartsProps> = ({data}) => {
         }
       });
 
-      setChartData({ dates, reads, writes });  
-      }
-      
-
+      setChartData({ dates, reads, writes });
+    }
   }, [data]);
   return (
     <Card style={{ height: '100%' }} shadow="xl" padding="xl" radius="lg">
-      
       <Line
         height={200}
         width={250}

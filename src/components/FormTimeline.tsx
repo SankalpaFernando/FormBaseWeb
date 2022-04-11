@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import React from 'react';
 import { Text, Timeline } from '@mantine/core';
 import { useGetFormLogsQuery } from '../redux/api/form';
@@ -6,9 +8,9 @@ import moment from 'moment';
 
 type FormChartProps = {
   data: Object;
-}
+};
 
-const FormTimeline:React.FC<FormChartProps>=({data})=>{
+const FormTimeline: React.FC<FormChartProps> = ({ data }) => {
   enum OpType {
     READ,
     NEW,
@@ -19,7 +21,7 @@ const FormTimeline:React.FC<FormChartProps>=({data})=>{
     <div>
       <Timeline mt={45} ml={35} active={2}>
         {!isEmpty(data) ? (
-          data?.map(({ ip, location, opType,_id }) => (
+          data?.map(({ ip, location, opType, _id }) => (
             <Timeline.Item
               title={(() => {
                 switch (opType) {
@@ -41,7 +43,9 @@ const FormTimeline:React.FC<FormChartProps>=({data})=>{
                   {location.country || 'Country not Specified'}
                 </Text>
                 <Text color="dimmed">
-                  {moment(new Date(parseInt(_id.substring(0, 8), 16) * 1000)).format("YYYY-MM-DD HH:mm")}
+                  {moment(
+                    new Date(parseInt(_id.substring(0, 8), 16) * 1000)
+                  ).format('YYYY-MM-DD HH:mm')}
                 </Text>
               </pre>
               <Text></Text>
@@ -56,6 +60,6 @@ const FormTimeline:React.FC<FormChartProps>=({data})=>{
       </Timeline>
     </div>
   );
-}
+};
 
 export default FormTimeline;

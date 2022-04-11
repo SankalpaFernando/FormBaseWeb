@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import React, { useEffect, useState } from 'react';
 import {
   ActionIcon,
@@ -41,13 +43,16 @@ type WebhookCreateProps = {
 export const WebhookCreate: React.FC<WebhookCreateProps> = ({
   formID,
   callback,
-  type = "Create",
-  data
+  type = 'Create',
+  data,
 }) => {
   const [tokenVisible, setTokenVisible] = useState(false);
-  const [addWebhook, { isLoading:isAddLoading, isSuccess:isAddSuccess }] = useAddWebhookMutation();
-  const [updateWebhook, { isLoading: isUpdateLoading, isSuccess: isUpdateSuccess }] =
-    useUpdateWebhookMutation();
+  const [addWebhook, { isLoading: isAddLoading, isSuccess: isAddSuccess }] =
+    useAddWebhookMutation();
+  const [
+    updateWebhook,
+    { isLoading: isUpdateLoading, isSuccess: isUpdateSuccess },
+  ] = useUpdateWebhookMutation();
 
   let initialValues = {
     name: '',
@@ -67,8 +72,11 @@ export const WebhookCreate: React.FC<WebhookCreateProps> = ({
       name: (value) =>
         isEmpty(value) ? 'Webhook Name should not be empty ' : null,
       url: (value) =>
-        (isEmpty(value) ||
-        ! (/(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/.test(value))) ? 'Webhook Url should be a valid URL and should not be empty'
+        isEmpty(value) ||
+        !/(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/.test(
+          value
+        )
+          ? 'Webhook Url should be a valid URL and should not be empty'
           : null,
       tokenName: (value) =>
         isEmpty(value)
@@ -81,10 +89,14 @@ export const WebhookCreate: React.FC<WebhookCreateProps> = ({
 
   const onSubmit = () => {
     if (!form.validate().hasErrors) {
-      if (type == "Create") {
+      if (type == 'Create') {
         addWebhook({ formID, body: { ...form.values } });
       } else {
-        updateWebhook({ formID, webhookID: data?.id, body: { ...form.values } });
+        updateWebhook({
+          formID,
+          webhookID: data?.id,
+          body: { ...form.values },
+        });
       }
     }
   };
@@ -93,7 +105,7 @@ export const WebhookCreate: React.FC<WebhookCreateProps> = ({
     if (isAddSuccess || isUpdateSuccess) {
       callback();
     }
-  }, [isAddSuccess,isUpdateSuccess]);
+  }, [isAddSuccess, isUpdateSuccess]);
 
   return (
     <div>
@@ -150,10 +162,10 @@ export const WebhookCreate: React.FC<WebhookCreateProps> = ({
       >
         <Input
           id="projectName"
-          type={tokenVisible ?"":"password"}
+          type={tokenVisible ? '' : 'password'}
           {...form.getInputProps('token')}
           rightSection={
-            <ActionIcon onClick={()=>setTokenVisible(!tokenVisible)}>
+            <ActionIcon onClick={() => setTokenVisible(!tokenVisible)}>
               {tokenVisible ? <AiFillEye /> : <AiFillEyeInvisible />}
             </ActionIcon>
           }

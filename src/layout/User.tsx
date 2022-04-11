@@ -1,19 +1,29 @@
-import React from 'react'
-import { Group, UnstyledButton,Text,Avatar, Button } from '@mantine/core';
+// @ts-nocheck
+
+import React from 'react';
+import { Group, UnstyledButton, Text, Avatar, Button } from '@mantine/core';
 import useStyles from './Layout.styles';
 import axios from 'axios';
 
 type UserProps = {
-  image: string,
-  name: string,
-  email: string,
-  onClick:Function
-}
+  image: string;
+  name: string;
+  email: string;
+  onClick: Function;
+};
 
-const User: React.FC<UserProps> = ({image,name,email,onClick}): JSX.Element => {
-  console.log("🚀 ~ file: User.tsx ~ line 23 ~ .finally ~ window.location.host", window.location.host)
+const User: React.FC<UserProps> = ({
+  image,
+  name,
+  email,
+  onClick,
+}): JSX.Element => {
+  console.log(
+    '🚀 ~ file: User.tsx ~ line 23 ~ .finally ~ window.location.host',
+    window.location.host
+  );
   const { classes, cx } = useStyles();
- 
+
   const onSignOut = () => {
     axios
       .get(`${import.meta.env.VITE_API}/auth/signout`, {
@@ -22,7 +32,7 @@ const User: React.FC<UserProps> = ({image,name,email,onClick}): JSX.Element => {
       .finally(() => {
         window.location.href = `${window.location.origin}/login`;
       });
-  }
+  };
 
   return (
     <div onClick={onClick} className={classes.user}>
@@ -37,11 +47,16 @@ const User: React.FC<UserProps> = ({image,name,email,onClick}): JSX.Element => {
           </Text>
         </div>
       </Group>
-      <Button onClick={onSignOut} mt={20} variant="light" style={{ width: '100%' }}>
+      <Button
+        onClick={onSignOut}
+        mt={20}
+        variant="light"
+        style={{ width: '100%' }}
+      >
         Sign Out
       </Button>
     </div>
   );
-}
+};
 
-export default User
+export default User;

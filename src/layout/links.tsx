@@ -1,4 +1,13 @@
-import { ArchiveIcon, BarChartIcon, ClipboardIcon, DashboardIcon, FileTextIcon, LayersIcon } from "@modulz/radix-icons";
+// @ts-nocheck
+
+import {
+  ArchiveIcon,
+  BarChartIcon,
+  ClipboardIcon,
+  DashboardIcon,
+  FileTextIcon,
+  LayersIcon,
+} from '@modulz/radix-icons';
 
 const links = [
   { label: 'Dashboard', icon: DashboardIcon, href: '/' },

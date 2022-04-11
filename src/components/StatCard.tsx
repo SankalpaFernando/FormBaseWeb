@@ -1,6 +1,8 @@
-import { Card,Text,ThemeIcon } from '@mantine/core';
+// @ts-nocheck
+
+import { Card, Text, ThemeIcon } from '@mantine/core';
 import { isEmpty, isNaN, isUndefined } from 'lodash';
-import React from 'react'
+import React from 'react';
 
 type StatsCardProps = {
   label: string;
@@ -9,7 +11,7 @@ type StatsCardProps = {
 };
 
 const StatCard: React.FC<StatsCardProps> = ({ label, stats, Icon }) => {
-console.log("🚀 ~ file: StatCard.tsx ~ line 12 ~ stats", stats)
+  console.log('🚀 ~ file: StatCard.tsx ~ line 12 ~ stats', stats);
   return (
     <Card
       style={{ width: '100%', margin: 'auto' }}
@@ -25,11 +27,8 @@ console.log("🚀 ~ file: StatCard.tsx ~ line 12 ~ stats", stats)
           >
             {label}
           </Text>
-          <Text
-            align="left"
-            style={{ fontSize: '34px', lineHeight: '2.4rem' }}
-          >
-            {!isUndefined(stats)?stats:"0"}
+          <Text align="left" style={{ fontSize: '34px', lineHeight: '2.4rem' }}>
+            {!isUndefined(stats) ? stats : '0'}
           </Text>
         </div>
         <div style={{ display: 'flex', justifyContent: 'right' }}>
@@ -45,4 +44,4 @@ console.log("🚀 ~ file: StatCard.tsx ~ line 12 ~ stats", stats)
   );
 };
 
-export default StatCard
+export default StatCard;

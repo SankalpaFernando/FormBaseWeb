@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import { useToast } from '@chakra-ui/react';
 import { ActionIcon, Button, Card, Grid, Modal, Text } from '@mantine/core';
 import { Pencil1Icon } from '@modulz/radix-icons';
@@ -12,7 +14,7 @@ import NewTemplate from './NewTemplate';
 type TemplateCardProps = {
   id: string;
   name: string;
-  type: "User" | "Default",
+  type: 'User' | 'Default';
   template: string;
   refetch: Function;
 };
@@ -22,21 +24,22 @@ const TemplateCard: React.FC<TemplateCardProps> = ({
   name,
   template,
   type,
-  refetch
+  refetch,
 }) => {
   const [open, setOpen] = useState(false);
-  const [opType, setOpType] = useState("update")
-  const [deleteTemplate, { isLoading, isSuccess }] = useDeleteTemplateMutation();
+  const [opType, setOpType] = useState('update');
+  const [deleteTemplate, { isLoading, isSuccess }] =
+    useDeleteTemplateMutation();
 
   const toast = useToast();
 
   useEffect(() => {
     if (isSuccess) {
       setOpen(false);
-      toast({ title: "Template Deleted", status: "success" });
+      toast({ title: 'Template Deleted', status: 'success' });
       refetch();
     }
-  },[isSuccess])
+  }, [isSuccess]);
   return (
     <>
       <Modal
@@ -50,8 +53,8 @@ const TemplateCard: React.FC<TemplateCardProps> = ({
             type="Update"
             successCallback={() => {
               setOpen(false);
-              refetch()
-            } }
+              refetch();
+            }}
           />
         ) : (
           <>
@@ -63,7 +66,9 @@ const TemplateCard: React.FC<TemplateCardProps> = ({
                 marginTop: '1rem',
               }}
             >
-              <Button onClick={()=>deleteTemplate(id)} color="red">Yes,Delete</Button>
+              <Button onClick={() => deleteTemplate(id)} color="red">
+                Yes,Delete
+              </Button>
             </div>
           </>
         )}

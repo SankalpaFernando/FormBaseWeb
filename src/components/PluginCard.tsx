@@ -1,10 +1,12 @@
-import { Box,Button,Grid,Select,Text } from '@mantine/core';
-import React, { useRef, useState } from 'react'
+// @ts-nocheck
+
+import { Box, Button, Grid, Select, Text } from '@mantine/core';
+import React, { useRef, useState } from 'react';
 import { useNavigate } from 'react-router';
-import OauthPopup from "react-oauth-popup";
-import axios from "axios";
+import OauthPopup from 'react-oauth-popup';
+import axios from 'axios';
 import { useModals } from '@mantine/modals';
-import "../styles/components.scss"
+import '../styles/components.scss';
 import { useToast } from '@chakra-ui/react';
 
 type PluginCardProps = {
@@ -14,23 +16,35 @@ type PluginCardProps = {
   formID: string;
   callback: Function;
   activated: boolean;
-}
+};
 
-
-const PluginCard: React.FC<PluginCardProps> = ({ icon, name,description,formID,callback,activated }) => {
-
+const PluginCard: React.FC<PluginCardProps> = ({
+  icon,
+  name,
+  description,
+  formID,
+  callback,
+  activated,
+}) => {
   const [active, setActive] = useState(false);
   const [documentId, setDocumentID] = useState<string>();
   const modals = useModals();
   const toast = useToast();
   const onAuthCode = async (code: string) => {
-   const baseURL = `${import.meta.env.VITE_API}/plugin`; 
-  console.log("🚀 ~ file: PluginCard.tsx ~ line 27 ~ onAuthCode ~ code", code)
+    const baseURL = `${import.meta.env.VITE_API}/plugin`;
+    console.log(
+      '🚀 ~ file: PluginCard.tsx ~ line 27 ~ onAuthCode ~ code',
+      code
+    );
     try {
-      axios.get(`${baseURL}/google/code?code=${code}`)
-        .then(res => res.data)
-        .then(data => {
-        console.log("🚀 ~ file: PluginCard.tsx ~ line 31 ~ onAuthCode ~ data", data)
+      axios
+        .get(`${baseURL}/google/code?code=${code}`)
+        .then((res) => res.data)
+        .then((data) => {
+          console.log(
+            '🚀 ~ file: PluginCard.tsx ~ line 31 ~ onAuthCode ~ data',
+            data
+          );
           axios
             .post(`${baseURL}/add?formID=${formID}`, {
               access_token: data.access_token,
@@ -75,11 +89,11 @@ const PluginCard: React.FC<PluginCardProps> = ({ icon, name,description,formID,c
                   });
                 });
             });
-        })     
+        });
     } catch (e) {
       console.error(e);
     }
-};
+  };
 
   return (
     <Box
@@ -116,9 +130,7 @@ const PluginCard: React.FC<PluginCardProps> = ({ icon, name,description,formID,c
       >
         {activated ? (
           <>
-            <Button >
-              Revoke
-            </Button>
+            <Button>Revoke</Button>
           </>
         ) : (
           <>
@@ -126,15 +138,13 @@ const PluginCard: React.FC<PluginCardProps> = ({ icon, name,description,formID,c
               url="https://accounts.google.com/o/oauth2/v2/auth?access_type=offline&prompt=consent&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fspreadsheets%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fdrive%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fspreadsheets&state=formID&response_type=code&client_id=825212325994-r4tngsvhg637e1kkkot7uin9jphd6plg.apps.googleusercontent.com&redirect_uri=${import.meta.env.VITE_CALLBACK_URL}%2Fgoogle%2Fredirect"
               onCode={onAuthCode}
             >
-              <Button>
-                Authorize
-              </Button>
+              <Button>Authorize</Button>
             </OauthPopup>
           </>
         )}
       </div>
     </Box>
   );
-}
+};
 
-export default PluginCard
+export default PluginCard;

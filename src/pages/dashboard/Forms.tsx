@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { Button, Grid, Modal, SimpleGrid } from '@mantine/core';
 import React, { useEffect, useState } from 'react';
 import { GoPlus } from 'react-icons/go';
@@ -30,7 +31,7 @@ const Forms: React.FC = () => {
       <Grid>
         {data?.map(({ _id, name, description }) => (
           <Grid.Col xl={3} lg={4} md={4} sm={6}>
-            <FormCard id={_id} name={name} description={description}/>
+            <FormCard id={_id} name={name} description={description} />
           </Grid.Col>
         ))}
       </Grid>

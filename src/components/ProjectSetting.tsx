@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import {
   Button,
   Card,
@@ -18,7 +20,12 @@ import { FaWpforms } from 'react-icons/fa';
 import { isEmpty } from 'lodash';
 import { useNavigate, useParams } from 'react-router';
 import { useToast } from '@chakra-ui/react';
-import { useDeleteAllFormsMutation, useDeleteProjectMutation, useGetProjectByIDQuery, useUpdateProjectMutation } from '../redux/api/project';
+import {
+  useDeleteAllFormsMutation,
+  useDeleteProjectMutation,
+  useGetProjectByIDQuery,
+  useUpdateProjectMutation,
+} from '../redux/api/project';
 
 type ProjectSettingProps = {
   project: {
@@ -30,16 +37,19 @@ type ProjectSettingProps = {
   formRefetch: Function;
 };
 
-
 const ProjectSetting: React.FC<ProjectSettingProps> = ({
   project,
   projectRefetch,
   formRefetch,
 }) => {
-  const [updateProject, { isLoading: isUpdateLoading, isSuccess:isUpdateSuccess }] =
-    useUpdateProjectMutation();
-  const [deleteAllForms,{isSuccess:isDeleteAllSuccess}] = useDeleteAllFormsMutation();
-  const [deleteProject, { isSuccess: isDeleteProjectSuccess }] = useDeleteProjectMutation();
+  const [
+    updateProject,
+    { isLoading: isUpdateLoading, isSuccess: isUpdateSuccess },
+  ] = useUpdateProjectMutation();
+  const [deleteAllForms, { isSuccess: isDeleteAllSuccess }] =
+    useDeleteAllFormsMutation();
+  const [deleteProject, { isSuccess: isDeleteProjectSuccess }] =
+    useDeleteProjectMutation();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [dialogType, setDialogType] = useState('clear');
   const toast = useToast();
@@ -47,7 +57,7 @@ const ProjectSetting: React.FC<ProjectSettingProps> = ({
 
   const onDelete = () => {
     if (dialogType === 'clear') {
-      deleteAllForms({ projectID: project._id })
+      deleteAllForms({ projectID: project._id });
     } else {
       deleteProject({ projectID: project._id });
     }
@@ -79,16 +89,16 @@ const ProjectSetting: React.FC<ProjectSettingProps> = ({
         title: 'Forms of the Project Deleted',
         status: 'success',
       });
-      projectRefetch()
+      projectRefetch();
     }
-  }, [isDeleteAllSuccess])
+  }, [isDeleteAllSuccess]);
   useEffect(() => {
     if (isDeleteProjectSuccess) {
       toast({
         title: 'The Project Deleted',
         status: 'success',
       });
-      navigate("/projects")
+      navigate('/projects');
     }
   }, [isDeleteProjectSuccess]);
   const form = useForm({
@@ -240,4 +250,4 @@ const ProjectSetting: React.FC<ProjectSettingProps> = ({
   );
 };
 
-export default ProjectSetting
+export default ProjectSetting;

@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import {
   Badge,
   Button,
@@ -16,7 +18,7 @@ import {
   Text,
   Textarea,
 } from '@mantine/core';
-import { useClipboard} from "@mantine/hooks"
+import { useClipboard } from '@mantine/hooks';
 import React, { useEffect, useState, KeyboardEvent } from 'react';
 import { GoPlus } from 'react-icons/go';
 import { FiSearch, FiSettings } from 'react-icons/fi';
@@ -38,9 +40,14 @@ import {
 import PluginCard from './PluginCard';
 import { WebhookCreate, WebhookItems } from './Webhook';
 import { GrDocumentUpdate } from 'react-icons/gr';
-import { MdDelete} from "react-icons/md"
+import { MdDelete } from 'react-icons/md';
 import { BsFillPencilFill, BsFillTrashFill } from 'react-icons/bs';
-import { useDeleteAllMutation, useDeleteFormMutation, useDeleteWebhookMutation, useUpdateFormMutation } from '../redux/api/form';
+import {
+  useDeleteAllMutation,
+  useDeleteFormMutation,
+  useDeleteWebhookMutation,
+  useUpdateFormMutation,
+} from '../redux/api/form';
 import { Cross1Icon } from '@modulz/radix-icons';
 import { formObjectType } from '../utils/customTypes';
 import { useGetAllTemplateQuery } from '../redux/api/template';
@@ -48,19 +55,31 @@ import { useGetAllTemplateQuery } from '../redux/api/template';
 type FormSettingProps = {
   formID: string;
   formObj: formObjectType;
-  refetch: Function
+  refetch: Function;
 };
 
-const FormSetting: React.FC<FormSettingProps> = ({ formID, formObj, refetch }) => {
-  const [updateForm, { isSuccess:isFormUpdateSuccess, isLoading }] = useUpdateFormMutation();
+const FormSetting: React.FC<FormSettingProps> = ({
+  formID,
+  formObj,
+  refetch,
+}) => {
+  const [updateForm, { isSuccess: isFormUpdateSuccess, isLoading }] =
+    useUpdateFormMutation();
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [deleteAllEntries, { isSuccess: isDeleteAllSuccess, isLoading: isDeleteAllLoading }] = useDeleteAllMutation();
-  const [dialogType,setDialogType] = useState("clear");
-  const [deleteForm, { isSuccess: isDeleteFormSuccess, isLoading: isDeleteFormLoading }] = useDeleteFormMutation();
-  const { data: templates, isLoading: isTemplateLoading } = useGetAllTemplateQuery({});
+  const [
+    deleteAllEntries,
+    { isSuccess: isDeleteAllSuccess, isLoading: isDeleteAllLoading },
+  ] = useDeleteAllMutation();
+  const [dialogType, setDialogType] = useState('clear');
+  const [
+    deleteForm,
+    { isSuccess: isDeleteFormSuccess, isLoading: isDeleteFormLoading },
+  ] = useDeleteFormMutation();
+  const { data: templates, isLoading: isTemplateLoading } =
+    useGetAllTemplateQuery({});
   const navigate = useNavigate();
   const toast = useToast();
-  const clipboard = useClipboard({timeout:1000});
+  const clipboard = useClipboard({ timeout: 1000 });
 
   const onDetailSubmit = () => {
     if (!form.validate().hasErrors) {
@@ -70,7 +89,10 @@ const FormSetting: React.FC<FormSettingProps> = ({ formID, formObj, refetch }) =
 
   useEffect(() => {
     if (formObj) {
-      console.log("🚀 ~ file: FormSetting.tsx ~ line 73 ~ useEffect ~ formObj", formObj)
+      console.log(
+        '🚀 ~ file: FormSetting.tsx ~ line 73 ~ useEffect ~ formObj',
+        formObj
+      );
       form.setValues({ ...formObj.data[0] });
     }
   }, [formObj]);
@@ -85,7 +107,7 @@ const FormSetting: React.FC<FormSettingProps> = ({ formID, formObj, refetch }) =
   }, [isFormUpdateSuccess]);
   useEffect(() => {
     if (isDeleteAllSuccess || isDeleteFormSuccess) {
-      if (dialogType==="clear") {
+      if (dialogType === 'clear') {
         toast({
           title: 'All the Entries Cleared',
           status: 'success',
@@ -95,21 +117,21 @@ const FormSetting: React.FC<FormSettingProps> = ({ formID, formObj, refetch }) =
           title: 'Form Successfully Deleted',
           status: 'success',
         });
-        navigate("/projects")
+        navigate('/projects');
       }
       refetch();
     }
-},[isDeleteAllSuccess,isDeleteFormSuccess])  
+  }, [isDeleteAllSuccess, isDeleteFormSuccess]);
   const form = useForm({
     initialValues: {
       name: '',
       description: '',
-      testModeOn:false,
+      testModeOn: false,
       origins: [],
       redirectURL: '',
       accessToken: '',
       templateID: '',
-      enableEmailNotification:false,
+      enableEmailNotification: false,
     },
     validate: {
       name: (value: string) =>
@@ -128,13 +150,13 @@ const FormSetting: React.FC<FormSettingProps> = ({ formID, formObj, refetch }) =
   });
 
   const onDeleteAll = () => {
-    if (dialogType === "clear") {
-      deleteAllEntries({formID});
+    if (dialogType === 'clear') {
+      deleteAllEntries({ formID });
     } else {
       deleteForm({ formID });
     }
     setDialogOpen(false);
-  }
+  };
 
   return (
     <>
@@ -321,14 +343,14 @@ const FormSetting: React.FC<FormSettingProps> = ({ formID, formObj, refetch }) =
                 // }
                 checked={form.getInputProps('testModeOn').value}
                 onChange={(e) =>
-                  form
-                    .getInputProps('testModeOn')
-                    .onChange(e.target.checked)
+                  form.getInputProps('testModeOn').onChange(e.target.checked)
                 }
                 mt={20}
                 mb={5}
               />
-              <Text size="xs" align="left" color="gray">Turning On the Option will disable the request origin check</Text>
+              <Text size="xs" align="left" color="gray">
+                Turning On the Option will disable the request origin check
+              </Text>
             </div>
 
             <div
@@ -449,8 +471,5 @@ const FormSetting: React.FC<FormSettingProps> = ({ formID, formObj, refetch }) =
     </>
   );
 };
-
-
-
 
 export default FormSetting;

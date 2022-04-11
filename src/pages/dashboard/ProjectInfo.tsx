@@ -1,16 +1,28 @@
-import { Button, Card, Grid, Input, InputWrapper, Modal, Pagination, Tabs, Text, Textarea } from '@mantine/core';
+// @ts-nocheck
+import {
+  Button,
+  Card,
+  Grid,
+  Input,
+  InputWrapper,
+  Modal,
+  Pagination,
+  Tabs,
+  Text,
+  Textarea,
+} from '@mantine/core';
 import React, { useEffect, useState } from 'react';
 import { GoPlus } from 'react-icons/go';
-import { FiSettings } from "react-icons/fi";
-import { useForm } from "@mantine/form"
-import { FaWpforms} from "react-icons/fa"
+import { FiSettings } from 'react-icons/fi';
+import { useForm } from '@mantine/form';
+import { FaWpforms } from 'react-icons/fa';
 import Header from '../../components/Header';
 import ProjectCard from '../../components/ProjectCard';
 import {
   useGetProjectByIDQuery,
   useUpdateProjectMutation,
 } from '../../redux/api/project';
-import { useGetFormsByProjectIDQuery } from "../../redux/api/form";
+import { useGetFormsByProjectIDQuery } from '../../redux/api/form';
 import { isEmpty } from 'lodash';
 import { useParams } from 'react-router';
 import { useToast } from '@chakra-ui/react';
@@ -21,21 +33,24 @@ import ProjectSetting from '../../components/ProjectSetting';
 const ProjectInfo: React.FC = () => {
   const [open, setOpen] = useState(false);
 
-  
   const { projectID } = useParams();
   const [page, setPage] = useState(1);
-  const { data:formsData, isLoading,refetch:formRefetch } = useGetFormsByProjectIDQuery({projectID,page});
-  const { data: projectData, refetch:projectRefetch } = useGetProjectByIDQuery(projectID);
-  
+  const {
+    data: formsData,
+    isLoading,
+    refetch: formRefetch,
+  } = useGetFormsByProjectIDQuery({ projectID, page });
+  const { data: projectData, refetch: projectRefetch } =
+    useGetProjectByIDQuery(projectID);
+
   const onSuccessCallback = () => {
     setOpen(false);
     formRefetch();
-  }
+  };
 
   useEffect(() => {
-    formRefetch()
-  },[])
-
+    formRefetch();
+  }, []);
 
   return (
     <div>

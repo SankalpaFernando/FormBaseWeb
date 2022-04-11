@@ -1,24 +1,36 @@
+// @ts-nocheck
+
 import { Button, Grid, Input, InputWrapper, Textarea } from '@mantine/core';
 import React, { useEffect } from 'react';
 import { useForm } from '@mantine/form';
 import { useAddPostMutation } from '../redux/api/project';
 import { isEmpty } from 'lodash';
 import { useToast } from '@chakra-ui/react';
-import { useAddTemplateMutation, useUpdateTemplateMutation } from '../redux/api/template';
+import {
+  useAddTemplateMutation,
+  useUpdateTemplateMutation,
+} from '../redux/api/template';
 
 type NewProjectProps = {
   successCallback: Function;
-  type: "Update" | "Add",
+  type: 'Update' | 'Add';
   data?: {
     name: string;
     template: string;
     id: string;
-  }
+  };
 };
 
-const NewTemplate: React.FC<NewProjectProps> = ({ successCallback,type,data }) => {
+const NewTemplate: React.FC<NewProjectProps> = ({
+  successCallback,
+  type,
+  data,
+}) => {
   const [addTemplate, { isLoading, isSuccess }] = useAddTemplateMutation();
-  const [updateTemplate, { isLoading:isUpdateLoading, isSuccess:isUpdateSuccess }] = useUpdateTemplateMutation();
+  const [
+    updateTemplate,
+    { isLoading: isUpdateLoading, isSuccess: isUpdateSuccess },
+  ] = useUpdateTemplateMutation();
 
   const toast = useToast();
   useEffect(() => {
@@ -30,12 +42,12 @@ const NewTemplate: React.FC<NewProjectProps> = ({ successCallback,type,data }) =
       form.reset();
       successCallback();
     }
-  }, [isSuccess,isUpdateSuccess]);
+  }, [isSuccess, isUpdateSuccess]);
   useEffect(() => {
     if (type === 'Update' && data != undefined) {
       form.setValues({ name: data.name, template: data.template });
     }
-  },[])
+  }, []);
   const form = useForm({
     initialValues: {
       name: '',
@@ -52,11 +64,11 @@ const NewTemplate: React.FC<NewProjectProps> = ({ successCallback,type,data }) =
           : null,
     },
   });
-  
+
   const onSubmit = () => {
     if (!form.validate().hasErrors) {
-      if (type === "Add") return addTemplate(form.values);
-      return updateTemplate({templateID:data?.id,body:{...form.values}})
+      if (type === 'Add') return addTemplate(form.values);
+      return updateTemplate({ templateID: data?.id, body: { ...form.values } });
     }
   };
   return (

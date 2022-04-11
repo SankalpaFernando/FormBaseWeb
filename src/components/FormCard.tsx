@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import { Card, Text } from '@mantine/core';
 import React from 'react';
 import { useDispatch } from 'react-redux';

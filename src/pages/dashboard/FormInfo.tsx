@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import {
   Button,
   Card,
@@ -46,7 +48,11 @@ function FormInfo() {
         <Tabs.Tab style={{ padding: '0 3rem' }} icon={<BiData />} label="Data">
           <EntryTable formID={formID} />
         </Tabs.Tab>
-        <Tabs.Tab style={{ padding: '0 3rem' }} icon={<BiMailSend />} label="Mail">
+        <Tabs.Tab
+          style={{ padding: '0 3rem' }}
+          icon={<BiMailSend />}
+          label="Mail"
+        >
           <EmailTable formID={formID} />
         </Tabs.Tab>
         <Tabs.Tab

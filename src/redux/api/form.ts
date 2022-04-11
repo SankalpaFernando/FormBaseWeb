@@ -1,23 +1,17 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+// @ts-nocheck
+
+import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
 type FormProps = {
   _id: string;
   name: string;
   description: string;
-}
-
+};
 
 type GetFormByIDProps = {
   docs: FormProps[];
   totalPages: number;
 };
-
-
-
-
-
-
-
 
 export const formAPI = createApi({
   reducerPath: 'formAPI',
@@ -114,7 +108,6 @@ export const formAPI = createApi({
     getAllForms: builder.query({ query: () => `/form/all` }),
   }),
 });
-
 
 export const {
   useGetFormsByProjectIDQuery,

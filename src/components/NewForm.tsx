@@ -1,16 +1,33 @@
-import { Badge, Box, Button, Grid, Group, Image, Input, InputWrapper, Select, SimpleGrid, Stepper, Switch, Text, Textarea } from '@mantine/core'
+// @ts-nocheck
+
+import {
+  Badge,
+  Box,
+  Button,
+  Grid,
+  Group,
+  Image,
+  Input,
+  InputWrapper,
+  Select,
+  SimpleGrid,
+  Stepper,
+  Switch,
+  Text,
+  Textarea,
+} from '@mantine/core';
 import { Cross1Icon } from '@modulz/radix-icons';
-import { BiDetail } from "react-icons/bi";
-import { GrConfigure } from "react-icons/gr";
-import slack from "../resources/slack.png"
-import discord from "../resources/discord.svg"
-import trello from "../resources/trello.jpg";
+import { BiDetail } from 'react-icons/bi';
+import { GrConfigure } from 'react-icons/gr';
+import slack from '../resources/slack.png';
+import discord from '../resources/discord.svg';
+import trello from '../resources/trello.jpg';
 import googlesheet from '../resources/googlesheet.png';
-import URLRegex from "url-regex";
+import URLRegex from 'url-regex';
 import { BsPlug } from 'react-icons/bs';
-import React, { KeyboardEvent, useEffect, useState } from 'react'
-import {useForm} from "@mantine/form"
-import "../styles/components.scss"
+import React, { KeyboardEvent, useEffect, useState } from 'react';
+import { useForm } from '@mantine/form';
+import '../styles/components.scss';
 import PluginCard from './PluginCard';
 import { isEmpty } from 'lodash';
 import { useAddFormMutation } from '../redux/api/form';
@@ -22,9 +39,8 @@ import axios from 'axios';
 
 type NewFormProps = {
   projectID: string | undefined;
-  onSuccessCallback:Function
-}
-
+  onSuccessCallback: Function;
+};
 
 const NewForm: React.FC<NewFormProps> = ({ projectID, onSuccessCallback }) => {
   const [active, setActive] = useState(0);
@@ -33,10 +49,10 @@ const NewForm: React.FC<NewFormProps> = ({ projectID, onSuccessCallback }) => {
     initialValues: {
       name: '',
       description: '',
-      templateID: "",
+      templateID: '',
       googleCode: {
-        access_token: "",
-        refresh_token:""
+        access_token: '',
+        refresh_token: '',
       },
       origins: [],
       enableEmailNotification: false,
@@ -58,26 +74,31 @@ const NewForm: React.FC<NewFormProps> = ({ projectID, onSuccessCallback }) => {
         !(!isEmpty(value) && URLRegex().test(value))
           ? 'Redirect URL should be a valid URL'
           : null,
-      googleCode: ({ access_token, refresh_token}) =>  form.getInputProps("enableEmailNotification").value ? ( (isEmpty(access_token) || isEmpty(refresh_token)?"Need to Authenticate Google Email Service":null) ): null
+      googleCode: ({ access_token, refresh_token }) =>
+        form.getInputProps('enableEmailNotification').value
+          ? isEmpty(access_token) || isEmpty(refresh_token)
+            ? 'Need to Authenticate Google Email Service'
+            : null
+          : null,
     },
   });
   const toast = useToast();
-    useEffect(() => {
-      if (isSuccess) {
-        toast({
-          title: 'New Project Added',
-          status: 'success',
-        });
-        form.reset();
-        onSuccessCallback();
-      }
-    }, [isSuccess]);
+  useEffect(() => {
+    if (isSuccess) {
+      toast({
+        title: 'New Project Added',
+        status: 'success',
+      });
+      form.reset();
+      onSuccessCallback();
+    }
+  }, [isSuccess]);
   const onValidNext = () => {
     const nameError = active === 0 && form.validateField('name').hasError;
     const descriptionError =
       active === 0 && form.validateField('description').hasError;
     const originError = active === 1 && form.validateField('origins').hasError;
-    const authError = active === 0 && form.validateField("googleCode").hasError;
+    const authError = active === 0 && form.validateField('googleCode').hasError;
     const redirectURLError =
       active === 1 && form.validateField('redirectURL').hasError;
 
@@ -130,7 +151,9 @@ const NewForm: React.FC<NewFormProps> = ({ projectID, onSuccessCallback }) => {
   );
 };
 
-const FormDetails: React.FC<{form:ReturnType<typeof useForm>}> = ({ form }) => {
+const FormDetails: React.FC<{ form: ReturnType<typeof useForm> }> = ({
+  form,
+}) => {
   const [emailEnable, setEmailEnable] = useState(false);
   const { data: templates, isLoading } = useGetAllTemplateQuery({});
   const onAuthCode = async (code: string) => {
@@ -220,7 +243,9 @@ const FormDetails: React.FC<{form:ReturnType<typeof useForm>}> = ({ form }) => {
           </InputWrapper>
         </Grid.Col>
         <OauthPopup
-          url={`https://accounts.google.com/o/oauth2/v2/auth?access_type=offline&prompt=consent&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fgmail.send%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email&state=formID&response_type=code&client_id=825212325994-r4tngsvhg637e1kkkot7uin9jphd6plg.apps.googleusercontent.com&redirect_uri=${import.meta.env.VITE_CALLBACK_URL}%2Fgoogle%2Fredirect`}
+          url={`https://accounts.google.com/o/oauth2/v2/auth?access_type=offline&prompt=consent&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fgmail.send%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email&state=formID&response_type=code&client_id=825212325994-r4tngsvhg637e1kkkot7uin9jphd6plg.apps.googleusercontent.com&redirect_uri=${
+            import.meta.env.VITE_CALLBACK_URL
+          }%2Fgoogle%2Fredirect`}
           onCode={onAuthCode}
         >
           <Button leftIcon={<FaGoogle />} variant="light">
@@ -237,8 +262,7 @@ const FormDetails: React.FC<{form:ReturnType<typeof useForm>}> = ({ form }) => {
   );
 };
 
-
-const FormConfiguration: React.FC<{form:any}> = ({form}) => {
+const FormConfiguration: React.FC<{ form: any }> = ({ form }) => {
   return (
     <Grid>
       <Grid.Col>
@@ -300,7 +324,7 @@ const FormConfiguration: React.FC<{form:any}> = ({form}) => {
       </Grid.Col>
     </Grid>
   );
-}
+};
 
 const PluginConfiguration: React.FC = () => {
   return (
@@ -315,7 +339,10 @@ const PluginConfiguration: React.FC = () => {
         </InputWrapper>
       </Grid.Col>
       <Grid.Col>
-        <SimpleGrid cols={2} style={{width:"95%",margin:"auto",marginTop:".8rem"}}>
+        <SimpleGrid
+          cols={2}
+          style={{ width: '95%', margin: 'auto', marginTop: '.8rem' }}
+        >
           <PluginCard
             icon={slack}
             name="Slack"
@@ -340,6 +367,6 @@ const PluginConfiguration: React.FC = () => {
       </Grid.Col>
     </Grid>
   );
-}
+};
 
 export default NewForm;

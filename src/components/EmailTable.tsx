@@ -1,3 +1,4 @@
+// @ts-nocheck
 import {
   Table,
   TableCaption,
@@ -21,9 +22,9 @@ import {
   Pagination,
   Text,
   Textarea,
-  Notification
+  Notification,
 } from '@mantine/core';
-import {useForm} from "@mantine/form"
+import { useForm } from '@mantine/form';
 import { isEmpty, startCase } from 'lodash';
 import * as moment from 'moment';
 import React, { useEffect, useRef, useState } from 'react';
@@ -38,8 +39,8 @@ import {
   useSendEmailIdsMutation,
 } from '../redux/api/form';
 import { Check, X } from 'tabler-icons-react';
-import {v4 as uuid} from "uuid";
-import fileDownload from "js-file-download";
+import { v4 as uuid } from 'uuid';
+import fileDownload from 'js-file-download';
 import axios from 'axios';
 
 type EntryTableDashboard = {
@@ -51,15 +52,21 @@ const EmailTable: React.FC<EntryTableDashboard> = ({ formID }) => {
   const [open, setOpen] = useState(false);
   const [emailIds, setEmailIds] = useState([]);
   const loadingRef = useRef<any>();
-  const [sendEmailAll, { isSuccess: isSendEmailAllSuccess, isLoading: isSendEmailAllLoading }] = useSendEmailAllMutation();
-  const [sendEmailIds, { isSuccess: isSendEmailIdsSuccess, isLoading: isSendEmailIdsLoading }] = useSendEmailIdsMutation();
+  const [
+    sendEmailAll,
+    { isSuccess: isSendEmailAllSuccess, isLoading: isSendEmailAllLoading },
+  ] = useSendEmailAllMutation();
+  const [
+    sendEmailIds,
+    { isSuccess: isSendEmailIdsSuccess, isLoading: isSendEmailIdsLoading },
+  ] = useSendEmailIdsMutation();
   const { data } = useGetEmailEntriesQuery({ formID, page });
   const toast = useToast();
 
   useEffect(() => {
     if (isSendEmailAllSuccess || isSendEmailIdsSuccess) {
       if (loadingRef.current) {
-        toast.close(loadingRef.current)
+        toast.close(loadingRef.current);
         toast({
           render: () => (
             <Notification
@@ -75,7 +82,7 @@ const EmailTable: React.FC<EntryTableDashboard> = ({ formID }) => {
         });
       }
     }
-  }, [isSendEmailAllSuccess,isSendEmailIdsSuccess]);
+  }, [isSendEmailAllSuccess, isSendEmailIdsSuccess]);
   const form = useForm({
     initialValues: {
       subject: '',
@@ -85,7 +92,7 @@ const EmailTable: React.FC<EntryTableDashboard> = ({ formID }) => {
       subject: (value) =>
         isEmpty(value) ? "Email's Subject is should not be empty" : null,
       template: (value) =>
-        isEmpty(value) ? "Template is should not be empty" : null,
+        isEmpty(value) ? 'Template is should not be empty' : null,
     },
   });
 
@@ -94,7 +101,7 @@ const EmailTable: React.FC<EntryTableDashboard> = ({ formID }) => {
       if (isEmpty(emailIds)) {
         sendEmailAll({ formID, body: { ...form.values } });
       } else {
-        sendEmailIds({ formID, body: { ...form.values,ids:emailIds } });
+        sendEmailIds({ formID, body: { ...form.values, ids: emailIds } });
       }
       setOpen(false);
       toast({
@@ -112,7 +119,7 @@ const EmailTable: React.FC<EntryTableDashboard> = ({ formID }) => {
       });
       loadingRef.current = toast({
         duration: null,
-        position:"top-right",
+        position: 'top-right',
         render: () => (
           <Notification
             loading
@@ -127,9 +134,9 @@ const EmailTable: React.FC<EntryTableDashboard> = ({ formID }) => {
           </Notification>
         ),
       });
-      form.reset()
+      form.reset();
     }
-  }
+  };
   const onDownload = () => {
     axios(`${import.meta.env.VITE_API}/form/download/email/${formID}`, {
       withCredentials: true,
@@ -144,23 +151,23 @@ const EmailTable: React.FC<EntryTableDashboard> = ({ formID }) => {
         `emailList-${moment().format('YYYY-MM-DD HH:mm:ss')}.csv`
       );
     });
-  }
+  };
 
- const onEmailCheck = async (
-   _id: string,
-   e: React.ChangeEvent<HTMLInputElement>
- ) => {
-   console.log("I got Called")
-   let tempIds = [...emailIds];
-   if (!e.target.checked) {
-     tempIds = tempIds.filter((val: string) => val !== _id);
-   } else {
-     if (!tempIds.includes(_id)) {
-       tempIds.push(_id);
-     }
-   }
-   setEmailIds([...tempIds]);
- };
+  const onEmailCheck = async (
+    _id: string,
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    console.log('I got Called');
+    let tempIds = [...emailIds];
+    if (!e.target.checked) {
+      tempIds = tempIds.filter((val: string) => val !== _id);
+    } else {
+      if (!tempIds.includes(_id)) {
+        tempIds.push(_id);
+      }
+    }
+    setEmailIds([...tempIds]);
+  };
   return (
     <div style={{ width: '70%', margin: '1rem auto' }}>
       <Modal size="xl" opened={open} onClose={() => setOpen(false)}>
@@ -244,12 +251,7 @@ const EmailTable: React.FC<EntryTableDashboard> = ({ formID }) => {
         >
           Send Email
         </Button>
-        <Button
-          color="teal"
-          variant="filled"
-          mr={10}
-          onClick={onDownload}
-        >
+        <Button color="teal" variant="filled" mr={10} onClick={onDownload}>
           Download Email List
         </Button>
       </div>
