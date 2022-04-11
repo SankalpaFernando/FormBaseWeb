@@ -46,6 +46,7 @@
     "react-router-dom": "^6.2.1",
     "redux-persist": "^6.0.0",
     "sass": "^1.49.9",
+    "tabler-icons-react": "^1.44.0",
     "url-regex": "^5.0.0",
     "uuidv4": "^6.2.13"
   },
