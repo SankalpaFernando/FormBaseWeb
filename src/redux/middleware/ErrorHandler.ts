@@ -6,9 +6,6 @@ import {
   Middleware,
 } from '@reduxjs/toolkit';
 
-/**
- * Log a warning and show a toast!
- */
 export const rtkQueryErrorLogger: Middleware =
   (api: MiddlewareAPI) => (next) => (action) => {
     if (isRejectedWithValue(action)) {
