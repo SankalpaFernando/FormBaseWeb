@@ -18,21 +18,20 @@ import { RootState } from '../redux/store';
 import axios from 'axios';
 import { setCurrentUser, setIsAuthenticated } from '../redux/reducer/routes';
 import { isEmpty } from 'lodash';
+import { useHistory } from 'react-router';
 
 const Layout: React.FC = ({ children }): JSX.Element => {
   const dispatch = useDispatch();
+  const history = useHistory();
   useEffect(() => {
     axios
       .get(`${import.meta.env.VITE_API}/auth/user`, { withCredentials: true })
       .then((res) => res.data)
       .then((data) => {
-        console.log(
-          '🚀 ~ file: Dashboard.tsx ~ line 18 ~ useEffect ~ data',
-          data
-        );
         dispatch(setCurrentUser({ ...data }));
         if (!isEmpty(data.name)) {
           dispatch(setIsAuthenticated(true));
+          history("/");
         }
       });
   }, []);
