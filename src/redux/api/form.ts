@@ -22,7 +22,7 @@ type GetFormByIDProps = {
 export const formAPI = createApi({
   reducerPath: 'formAPI',
   baseQuery: fetchBaseQuery({
-    baseUrl: 'http://localhost:5000',
+    baseUrl: import.meta.env.VITE_API,
     credentials: 'include',
   }),
   endpoints: (builder) => ({
@@ -53,10 +53,10 @@ export const formAPI = createApi({
       }),
     }),
     updateWebhook: builder.mutation({
-      query: ({ formID, webhookID,body }) => ({
+      query: ({ formID, webhookID, body }) => ({
         url: `/webhook/${formID}/${webhookID}`,
         method: 'PUT',
-        body
+        body,
       }),
     }),
     getFormLogs: builder.query({ query: (formID) => `/logs/latest/${formID}` }),
@@ -67,6 +67,9 @@ export const formAPI = createApi({
     getEntries: builder.query({
       query: ({ formID, page }) => `/entry/${formID}?page=${page}`,
     }),
+    getEmailEntries: builder.query({
+      query: ({ formID, page }) => `/entry/email/${formID}?page=${page}`,
+    }),
     getFormByID: builder.query({ query: (formID) => `/form/${formID}` }),
     updateForm: builder.mutation({
       query: ({ formID, body }) => ({
@@ -75,26 +78,40 @@ export const formAPI = createApi({
         body,
       }),
     }),
+    sendEmailAll: builder.mutation({
+      query: ({ formID, body }) => ({
+        url: `/form/email/all/${formID}`,
+        method: 'Post',
+        body,
+      }),
+    }),
+    sendEmailIds: builder.mutation({
+      query: ({ formID, body }) => ({
+        url: `/form/email/ids/${formID}`,
+        method: 'Post',
+        body,
+      }),
+    }),
     deleteEntryBulk: builder.mutation({
       query: (body) => ({
         url: `/entry`,
-        method: "Delete",
-        body
-      })
+        method: 'Delete',
+        body,
+      }),
     }),
     deleteAll: builder.mutation({
-      query: ({formID}) => ({
-        url:`/entry/all/${formID}`,
-        method:"Delete"
-      })
+      query: ({ formID }) => ({
+        url: `/entry/all/${formID}`,
+        method: 'Delete',
+      }),
     }),
     deleteForm: builder.mutation({
       query: ({ formID }) => ({
         url: `/form/${formID}`,
-        method:"Delete"
-      })
+        method: 'Delete',
+      }),
     }),
-    getAllForms: builder.query({query:()=>`/form/all`})
+    getAllForms: builder.query({ query: () => `/form/all` }),
   }),
 });
 
@@ -114,6 +131,9 @@ export const {
   useDeleteEntryBulkMutation,
   useDeleteAllMutation,
   useDeleteFormMutation,
-  useGetAllFormsQuery
+  useGetAllFormsQuery,
+  useGetEmailEntriesQuery,
+  useSendEmailAllMutation,
+  useSendEmailIdsMutation,
 } = formAPI;
 export default formAPI.reducer;

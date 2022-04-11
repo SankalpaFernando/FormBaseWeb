@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   AppShell,
   Navbar,
@@ -12,11 +12,30 @@ import MainLink from './MainLink';
 import links from './links';
 import User from './User';
 import Logo from './Logo';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../redux/store';
+import axios from 'axios';
+import { setCurrentUser, setIsAuthenticated } from '../redux/reducer/routes';
+import { isEmpty } from 'lodash';
 
 const Layout: React.FC = ({ children }): JSX.Element => {
-  const { photo, email, name } = useSelector((state: RootState) => state.route.currentUser);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    axios
+      .get(`${import.meta.env.VITE_API}/auth/user`, { withCredentials: true })
+      .then((res) => res.data)
+      .then((data) => {
+        console.log(
+          '🚀 ~ file: Dashboard.tsx ~ line 18 ~ useEffect ~ data',
+          data
+        );
+        dispatch(setCurrentUser({ ...data }));
+        if (!isEmpty(data.name)) {
+          dispatch(setIsAuthenticated(true));
+        }
+      });
+  }, []);
+  const currentUser = useSelector((state: RootState) => state.route.currentUser);
   const [popOverOpen, setPopOverOpen] = useState(false);
   return (
     <AppShell
@@ -38,13 +57,14 @@ const Layout: React.FC = ({ children }): JSX.Element => {
             ))}
           </Navbar.Section>
           <Navbar.Section>
-                <User
-                  onClick={()=>setPopOverOpen(!popOverOpen)}
-                  image={photo}
-                  name={name}
-                  email={email}
-                />
-              
+            {currentUser !== null && (
+              <User
+                onClick={() => setPopOverOpen(!popOverOpen)}
+                image={currentUser.photo}
+                name={currentUser.name}
+                email={currentUser.email}
+              />
+            )}
           </Navbar.Section>
         </Navbar>
       }

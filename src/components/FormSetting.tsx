@@ -104,6 +104,7 @@ const FormSetting: React.FC<FormSettingProps> = ({ formID, formObj, refetch }) =
     initialValues: {
       name: '',
       description: '',
+      testModeOn:false,
       origins: [],
       redirectURL: '',
       accessToken: '',
@@ -210,6 +211,7 @@ const FormSetting: React.FC<FormSettingProps> = ({ formID, formObj, refetch }) =
               mt={20}
               mb={20}
             />
+
             <InputWrapper
               id="templateID"
               // required={emailEnable}
@@ -311,6 +313,24 @@ const FormSetting: React.FC<FormSettingProps> = ({ formID, formObj, refetch }) =
             >
               <Input id="projectName" {...form.getInputProps('redirectURL')} />
             </InputWrapper>
+            <div>
+              <Switch
+                label="Test Mode"
+                // onChange={(event) =>
+                // setEmailEnable(event.currentTarget.checked)
+                // }
+                checked={form.getInputProps('testModeOn').value}
+                onChange={(e) =>
+                  form
+                    .getInputProps('testModeOn')
+                    .onChange(e.target.checked)
+                }
+                mt={20}
+                mb={5}
+              />
+              <Text size="xs" align="left" color="gray">Turning On the Option will disable the request origin check</Text>
+            </div>
+
             <div
               style={{
                 display: 'flex',

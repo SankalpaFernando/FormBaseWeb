@@ -9,12 +9,22 @@ import {
   Td,
   TableCaption,
 } from '@chakra-ui/react';
-import {FaChrome,FaApple,FaWindows,FaSafari,FaFirefox,FaLinux } from "react-icons/fa"
+import { FaChrome, FaApple, FaWindows, FaSafari, FaFirefox, FaLinux, FaAndroid, FaInternetExplorer, FaEdge, FaOpera } from "react-icons/fa"
+import { SiBrave} from "react-icons/si"
 import { Card, Pagination, Text, useMantineTheme } from '@mantine/core';
 import "../styles/components.scss";
+import { useGetLatestLogQuery } from '../redux/api/info';
+import moment from 'moment';
+import { MdOutlineDisabledByDefault } from 'react-icons/md';
+import { isEmpty } from 'lodash';
 const RecentActivity: React.FC = () => {
   const theme = useMantineTheme();
   const color = theme.colors[theme.primaryColor.toString()][4];
+
+  const {data:recentActivities,isLoading } = useGetLatestLogQuery({});
+
+
+
   return (
     <Card shadow="xl" radius="lg" padding="xl">
       <Text
@@ -30,60 +40,93 @@ const RecentActivity: React.FC = () => {
             <Th fontSize=".9rem">ID</Th>
             <Th fontSize=".9rem">Date/Time</Th>
             <Th fontSize=".9rem">OS</Th>
-            <Th fontSize=".9rem">Browser</Th>
+            <Th fontSize=".9rem" align="center">
+              Browser
+            </Th>
           </Tr>
         </Thead>
+        {isEmpty(recentActivities) && (
+          <Tr>
+            <Td></Td>
+            <Td></Td>
+            <Td style={{ marginTop: '5rem', paddingTop: '3rem',paddingBottom:"3rem" }}>
+              <Text color="gray" style={{ textAlign: 'center' }}>
+                No Recent Activities Recorded
+              </Text>
+            </Td>
+          </Tr>
+        )}
         <Tbody>
-          <Tr className="tableRow">
-            <Td style={{ color: '#8f8f8f' }}>621b6ece1044999257717777</Td>
-            <Td>2022-01-01 16:00:01</Td>
-            <Td>
-              <FaLinux fontSize="1.5rem" />
-            </Td>
-            <Td style={{ display: 'flex', justifyContent: 'center' }}>
-              <FaFirefox fontSize="1.5rem" />
-            </Td>
-          </Tr>
-          <Tr>
-            <Td style={{ color: '#8f8f8f' }}>621b6ece1044999257717451</Td>
-            <Td>2022-01-02 4:00:01</Td>
-            <Td>
-              <FaWindows fontSize="1.5rem" color={color} />
-            </Td>
-            <Td style={{ display: 'flex', justifyContent: 'center' }}>
-              <FaChrome fontSize="1.5rem" color={color}  />
-            </Td>
-          </Tr>
-          <Tr>
-            <Td style={{ color: '#8f8f8f' }}>621b6ece1044999257717410</Td>
-            <Td>2022-01-02 16:00:01</Td>
-            <Td>
-              <FaApple fontSize="1.5rem" />
-            </Td>
-            <Td style={{ display: 'flex', justifyContent: 'center' }}>
-              <FaSafari fontSize="1.5rem" />
-            </Td>
-          </Tr>
-          <Tr>
-            <Td style={{ color: '#8f8f8f' }}>621b6ece1044999257717410</Td>
-            <Td>2022-01-02 16:00:01</Td>
-            <Td>
-              <FaApple fontSize="1.5rem" />
-            </Td>
-            <Td style={{ display: 'flex', justifyContent: 'center' }}>
-              <FaSafari fontSize="1.5rem" />
-            </Td>
-          </Tr>
-          <Tr>
-            <Td style={{ color: '#8f8f8f' }}>621b6ece1044999257717410</Td>
-            <Td>2022-01-02 16:00:01</Td>
-            <Td>
-              <FaApple fontSize="1.5rem" />
-            </Td>
-            <Td style={{ display: 'flex', justifyContent: 'center' }}>
-              <FaSafari fontSize="1.5rem" />
-            </Td>
-          </Tr>
+          {!isLoading &&
+            recentActivities.map(({ _id, device }) => {
+              let os;
+              let browser;
+
+              switch (device?.os) {
+                case 'GNU/Linux':
+                  os = <FaLinux fontSize="1.5rem" />;
+                  break;
+                case 'Windows':
+                  os = <FaWindows fontSize="1.5rem" />;
+                  break;
+                case 'Android':
+                  os = <FaAndroid fontSize="1.5rem" />;
+                  break;
+                case 'iOS':
+                  os = <FaApple fontSize="1.5rem" />;
+                  break;
+                case 'MAC':
+                  os = <FaApple fontSize="1.5rem" />;
+                  break;
+                default:
+                  os = <MdOutlineDisabledByDefault fontSize="1.5rem" />;
+              }
+
+              switch (device?.browser) {
+                case 'Chrome':
+                  browser = <FaChrome fontSize="1.5rem" />;
+                  break;
+                case 'Chrome Mobile':
+                  browser = <FaChrome fontSize="1.5rem" />;
+                  break;
+                case 'Firefox':
+                  browser = <FaFirefox fontSize="1.5rem" />;
+                  break;
+                case 'Internet Explorer':
+                  browser = <FaInternetExplorer fontSize="1.5rem" />;
+                  break;
+                case 'Safari':
+                  browser = <FaSafari fontSize="1.5rem" />;
+                  break;
+                case 'Microsoft Edge':
+                  browser = <FaEdge fontSize="1.5rem" />;
+                  break;
+                case 'Opera':
+                  browser = <FaOpera fontSize="1.5rem" />;
+                  break;
+                case 'Brave':
+                  browser = <SiBrave fontSize="1.5rem" />;
+                  break;
+                default:
+                  browser = <MdOutlineDisabledByDefault fontSize="1.5rem" />;
+              }
+
+              return (
+                <Tr className="tableRow">
+                  <Td style={{ color: '#8f8f8f' }}>{_id}</Td>
+                  <Td>
+                    {moment(
+                      new Date(parseInt(_id.substring(0, 8), 16) * 1000)
+                    ).format('YYYY-MM-DD HH:mm:ss')}
+                  </Td>
+                  <Td>{os}</Td>
+
+                  <Td style={{ display: 'flex', justifyContent: 'center' }}>
+                    {browser}
+                  </Td>
+                </Tr>
+              );
+            })}
         </Tbody>
       </Table>
       <div
@@ -91,11 +134,9 @@ const RecentActivity: React.FC = () => {
           display: 'flex',
           justifyContent: 'center',
           width: '100%',
-          margin: '1rem 0',
+          margin: '1.6rem 0',
         }}
-      >
-        <Pagination total={1} />
-      </div>
+      ></div>
     </Card>
   );
 }

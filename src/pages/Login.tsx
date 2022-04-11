@@ -10,26 +10,9 @@ const Login: React.FC = () => {
   const [signUp, setSignUp] = useState(true);
   const dispatch = useDispatch()
   const onAuth = () => {
-    window.location.href = 'http://localhost:5000/auth';
+    window.location.href = `${import.meta.env.VITE_API}/auth`;
   }
-    // useEffect(() => {
-    //   axios
-    //     .get('http://localhost:5000/auth/user', { withCredentials: true })
-    //     .then((res) => res.data)
-    //     .then((data) => {
-    //       dispatch(setCurrentUser({ ...data }));
-    //       if (data !== null && data.name !== null) {
-    //         dispatch(setIsAuthenticated(true));
-    //         window.location.href = 'http://localhost:3000/dashboard';
-    //       } else {
-    //         dispatch(setIsAuthenticated(false));
-    //         window.location.href = 'http://localhost:3000/login';
-    //       }
-    //     })
-    //     .catch(() => {
-    //       dispatch(setIsAuthenticated(false));
-    //     });
-    // }, []);
+  
   return (
     <div
       style={{

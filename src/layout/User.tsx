@@ -11,12 +11,17 @@ type UserProps = {
 }
 
 const User: React.FC<UserProps> = ({image,name,email,onClick}): JSX.Element => {
+  console.log("🚀 ~ file: User.tsx ~ line 23 ~ .finally ~ window.location.host", window.location.host)
   const { classes, cx } = useStyles();
  
   const onSignOut = () => {
-    axios.get("http://localhost:5000/auth/signout", { withCredentials: true }).finally(() => {
-      window.location.href="http://localhost:3000/login"
-    })
+    axios
+      .get(`${import.meta.env.VITE_API}/auth/signout`, {
+        withCredentials: true,
+      })
+      .finally(() => {
+        window.location.href = `${window.location.origin}/login`;
+      });
   }
 
   return (

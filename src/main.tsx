@@ -6,16 +6,12 @@ import { ChakraProvider } from '@chakra-ui/react'
 import { Provider } from 'react-redux'
 import { store } from './redux/store'
 import { MantineProvider } from '@mantine/core'
-import { persistStore } from 'redux-persist';
-import { PersistGate } from 'redux-persist/integration/react';
 import { ModalsProvider } from '@mantine/modals';
 
-const persistor = persistStore(store);
 
 ReactDOM.render(
   <React.StrictMode>
       <Provider store={store}>
-        <PersistGate loading={null} persistor={persistor}>
           <ChakraProvider>
             <MantineProvider
               theme={{
@@ -34,7 +30,6 @@ ReactDOM.render(
               </ModalsProvider>
             </MantineProvider>
           </ChakraProvider>
-        </PersistGate>
       </Provider>
   </React.StrictMode>,
   document.getElementById('root')

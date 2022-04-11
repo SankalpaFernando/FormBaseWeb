@@ -14,30 +14,8 @@ import { Switch } from '@mantine/core'
 import AuthRoute from './layout/AuthRoute'
 import { useDispatch } from 'react-redux'
 import axios from 'axios'
-import { setCurrentUser, setIsAuthenticated } from './redux/reducer/routes'
-import {  useNavigate } from 'react-router'
-
 function App() {
-  const dispatch = useDispatch();
   
-//   useEffect(() => {
-//     console.log(window.location.ancestorOrigins);
-//     axios
-//     .get('http://localhost:5000/auth/user', { withCredentials: true })
-//     .then((res) => res.data)
-//     .then((data) => {
-//       dispatch(setCurrentUser({ ...data }));
-//       if (data !== null && data.name !== null) {
-//         dispatch(setIsAuthenticated(true));
-//       } else {
-//         dispatch(setIsAuthenticated(false));
-//         window.location.href = 'http://localhost:3000/login';
-//       }
-//     })
-//     .catch(() => {
-//       dispatch(setIsAuthenticated(false));
-//     });
-// },[]);
  
   return (
     <>
@@ -53,7 +31,7 @@ function App() {
               }
             >
               <Route
-                path="/dashboard"
+                path="/"
                 element={
                   <AuthRoute>
                     <Dashboard />

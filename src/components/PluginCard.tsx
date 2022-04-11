@@ -23,39 +23,58 @@ const PluginCard: React.FC<PluginCardProps> = ({ icon, name,description,formID,c
   const [documentId, setDocumentID] = useState<string>();
   const modals = useModals();
   const toast = useToast();
-  const onAuthCode = async (code:string) => {
+  const onAuthCode = async (code: string) => {
+   const baseURL = `${import.meta.env.VITE_API}/plugin`; 
   console.log("🚀 ~ file: PluginCard.tsx ~ line 27 ~ onAuthCode ~ code", code)
     try {
-      axios.get(`http://localhost:5000/plugin/google/code?code=${code}`)
+      axios.get(`${baseURL}/google/code?code=${code}`)
         .then(res => res.data)
         .then(data => {
         console.log("🚀 ~ file: PluginCard.tsx ~ line 31 ~ onAuthCode ~ data", data)
-          axios.post(`http://localhost:5000/plugin/add?formID=${formID}`, {
-            access_token: data.access_token,
-            refresh_toke:data.refresh_token,
-            name
-          }).then(() => {
-            axios.get(`http://localhost:5000/plugin/sheet/${formID}`).then(res => res.data)
-              .then(data => {
-                console.log(data)
-              modals.openConfirmModal({
-                title: 'Select A SpreadSheet',
-                children: (
-                  <Select  onChange={(value)=>setDocumentID(value)}  data={data.files.map((entry: ({ id: string; name:string})) => ({value:entry.id,label:entry.name}))} />
-                ),
-                labels: { confirm: 'Confirm', cancel: 'Cancel' },
-                onCancel: () => console.log('Cancel'),
-                onConfirm: () => {
-                  axios.put(`http://localhost:5000/plugin/sheet/${formID}`,{sheetID:documentId})
-                    .then(res => {
-                      modals.closeAll()
-                      toast({ title: "Plugin Successfully Added", status: "success" })
-                      callback();
-                    });
-                },
-              });
+          axios
+            .post(`${baseURL}/add?formID=${formID}`, {
+              access_token: data.access_token,
+              refresh_toke: data.refresh_token,
+              name,
             })
-          });
+            .then(() => {
+              axios
+                .get(`${baseURL}/sheet/${formID}`)
+                .then((res) => res.data)
+                .then((data) => {
+                  console.log(data);
+                  modals.openConfirmModal({
+                    title: 'Select A SpreadSheet',
+                    children: (
+                      <Select
+                        onChange={(value) => setDocumentID(value)}
+                        data={data.files.map(
+                          (entry: { id: string; name: string }) => ({
+                            value: entry.id,
+                            label: entry.name,
+                          })
+                        )}
+                      />
+                    ),
+                    labels: { confirm: 'Confirm', cancel: 'Cancel' },
+                    onCancel: () => console.log('Cancel'),
+                    onConfirm: () => {
+                      axios
+                        .put(`${baseURL}/sheet/${formID}`, {
+                          sheetID: documentId,
+                        })
+                        .then((res) => {
+                          modals.closeAll();
+                          toast({
+                            title: 'Plugin Successfully Added',
+                            status: 'success',
+                          });
+                          callback();
+                        });
+                    },
+                  });
+                });
+            });
         })     
     } catch (e) {
       console.error(e);
@@ -104,7 +123,7 @@ const PluginCard: React.FC<PluginCardProps> = ({ icon, name,description,formID,c
         ) : (
           <>
             <OauthPopup
-              url="https://accounts.google.com/o/oauth2/v2/auth?access_type=offline&prompt=consent&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fspreadsheets%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fdrive%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fspreadsheets&state=formID&response_type=code&client_id=825212325994-r4tngsvhg637e1kkkot7uin9jphd6plg.apps.googleusercontent.com&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Fgoogle%2Fredirect"
+              url="https://accounts.google.com/o/oauth2/v2/auth?access_type=offline&prompt=consent&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fspreadsheets%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fdrive%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fspreadsheets&state=formID&response_type=code&client_id=825212325994-r4tngsvhg637e1kkkot7uin9jphd6plg.apps.googleusercontent.com&redirect_uri=${import.meta.env.VITE_CALLBACK_URL}%2Fgoogle%2Fredirect"
               onCode={onAuthCode}
             >
               <Button>

@@ -3,15 +3,17 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react"
 export const infoAPI = createApi({
   reducerPath: 'infoAPI',
   baseQuery: fetchBaseQuery({
-    baseUrl: 'http://localhost:5000/info',
+    baseUrl: import.meta.env.VITE_API,
     credentials: 'include',
   }),
   endpoints: (builder) => ({
-    getDataSetInfo: builder.query({ query: () => '/count/dataset' }),
-    getFormInfo: builder.query({ query: () => '/count/form' }),
-    getProjectInfo: builder.query({ query: () => '/count/project' }),
-    getTemplateInfo: builder.query({query:()=> `/count/template`})
+    getDataSetInfo: builder.query({ query: () => '/info/count/dataset' }),
+    getFormInfo: builder.query({ query: () => '/info/count/form' }),
+    getProjectInfo: builder.query({ query: () => '/info/count/project' }),
+    getTemplateInfo: builder.query({ query: () => `/info/count/template` }),
+    getLatestLog: builder.query({ query: () => `/logs/latest` }),
+    getTotalSubmits: builder.query({ query: () => `/logs/charts` }),
   }),
 });
 
-export const { useGetProjectInfoQuery,useGetDataSetInfoQuery,useGetFormInfoQuery,useGetTemplateInfoQuery } = infoAPI;
+export const { useGetProjectInfoQuery,useGetDataSetInfoQuery,useGetFormInfoQuery,useGetTemplateInfoQuery,useGetLatestLogQuery,useGetTotalSubmitsQuery } = infoAPI;

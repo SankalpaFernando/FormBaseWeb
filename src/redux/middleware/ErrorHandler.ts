@@ -13,7 +13,7 @@ export const rtkQueryErrorLogger: Middleware =
       console.log("🚀 ~ file: ErrorHandler.ts ~ line 13 ~ action", action)
       // 401; Unauthorized Code
       if (action.payload.status === 401) {
-        window.location.href = 'http://localhost:3000/login';
+        window.location.href = `${import.meta.env.BASE_URL}/login`;
       }
     }
 

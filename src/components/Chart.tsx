@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Card,Text, useMantineTheme } from '@mantine/core';
 import { Line } from 'react-chartjs-2';
 import {
@@ -11,8 +11,13 @@ import {
   Tooltip,
   Legend,
 } from 'chart.js';
+import { useGetTotalSubmitsQuery } from '../redux/api/info';
+import { isEmpty } from 'lodash';
 
 const Chart: React.FC = () => {
+
+  const {data:DailySubmits,isLoading } = useGetTotalSubmitsQuery({});
+
   const theme = useMantineTheme();
   const color = theme.colors[theme.primaryColor.toString()][4];
   ChartJS.register(
@@ -24,6 +29,36 @@ const Chart: React.FC = () => {
     Tooltip,
     Legend
   );
+     const [chartData, setChartData] = useState({
+       dates: [],
+       writes: [],
+     });
+     useEffect(() => {
+       const dates: string[] = [];
+       const reads: string[] = [];
+       const writes: string[] = [];
+       if (!isEmpty(DailySubmits)) {
+
+         DailySubmits?.data?.writeCounts.forEach(
+           (entry: { _id: string }) =>
+             !dates.includes(entry._id) && dates.push(entry._id)
+         );
+
+         dates.forEach((date) => {
+           const writeIndex = DailySubmits?.data?.writeCounts.find(
+             (entry) => entry._id == date
+           );
+
+           if (writeIndex !== undefined) {
+             writes.push(writeIndex.total);
+           } else {
+             writes.push(0);
+           }
+         });
+
+         setChartData({ dates, writes });
+       }
+     }, [DailySubmits]);
   return (
     <Card shadow="xl" padding="xl" radius="lg">
       <Text
@@ -38,22 +73,13 @@ const Chart: React.FC = () => {
         height={200}
         width={250}
         data={{
-          labels: [
-            '01-01',
-            '01-02',
-            '01-03',
-            '01-04',
-            '01-05',
-            '01-06',
-            '01-07',
-            '01-08',
-          ],
+          labels: [...chartData.dates],
           datasets: [
             {
               label: 'Total Submits',
               backgroundColor: '#40c057',
               borderColor: `${color}`,
-              data: [0, 10, 5, 6, 6, 8, 7, 20],
+              data: [...chartData.writes],
             },
           ],
         }}

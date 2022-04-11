@@ -11,12 +11,13 @@ import {
   Textarea,
 } from '@mantine/core';
 import React, { useEffect, useState } from 'react';
-import { BiData } from 'react-icons/bi';
-import { FaWpforms } from 'react-icons/fa';
+import { BiData, BiMailSend, BiSearch } from 'react-icons/bi';
+import { FaSearch, FaWpforms } from 'react-icons/fa';
 import { FiSettings } from 'react-icons/fi';
 import { RiDashboard3Line } from 'react-icons/ri';
 import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
+import EmailTable from '../../components/EmailTable';
 import EntryTable from '../../components/EntryTable';
 import FormDashboard from '../../components/FormDashboard';
 import FormSetting from '../../components/FormSetting';
@@ -44,6 +45,9 @@ function FormInfo() {
         </Tabs.Tab>
         <Tabs.Tab style={{ padding: '0 3rem' }} icon={<BiData />} label="Data">
           <EntryTable formID={formID} />
+        </Tabs.Tab>
+        <Tabs.Tab style={{ padding: '0 3rem' }} icon={<BiMailSend />} label="Mail">
+          <EmailTable formID={formID} />
         </Tabs.Tab>
         <Tabs.Tab
           style={{ padding: '0 3rem' }}

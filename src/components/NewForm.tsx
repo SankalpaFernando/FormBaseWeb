@@ -136,11 +136,11 @@ const FormDetails: React.FC<{form:ReturnType<typeof useForm>}> = ({ form }) => {
   const onAuthCode = async (code: string) => {
     try {
       axios
-        .get(`http://localhost:5000/plugin/google/code?code=${code}`)
+        .get(`${import.meta.env.VITE_API}/plugin/google/code?code=${code}`)
         .then((res) => {
           const { access_token, refresh_token } = res.data;
-          form.setFieldValue("googleCode",{access_token,refresh_token})
-        })
+          form.setFieldValue('googleCode', { access_token, refresh_token });
+        });
     } catch (e) {
       console.error(e);
     }
@@ -220,7 +220,7 @@ const FormDetails: React.FC<{form:ReturnType<typeof useForm>}> = ({ form }) => {
           </InputWrapper>
         </Grid.Col>
         <OauthPopup
-          url="https://accounts.google.com/o/oauth2/v2/auth?access_type=offline&prompt=consent&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fgmail.send%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email&state=formID&response_type=code&client_id=825212325994-r4tngsvhg637e1kkkot7uin9jphd6plg.apps.googleusercontent.com&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Fgoogle%2Fredirect"
+          url={`https://accounts.google.com/o/oauth2/v2/auth?access_type=offline&prompt=consent&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fgmail.send%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email&state=formID&response_type=code&client_id=825212325994-r4tngsvhg637e1kkkot7uin9jphd6plg.apps.googleusercontent.com&redirect_uri=${import.meta.env.VITE_CALLBACK_URL}%2Fgoogle%2Fredirect`}
           onCode={onAuthCode}
         >
           <Button leftIcon={<FaGoogle />} variant="light">

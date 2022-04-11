@@ -1,5 +1,6 @@
 import { Table, TableCaption, Thead, Tbody,Td,Tr,Th,Tfoot } from '@chakra-ui/react';
-import { ActionIcon, Button, Checkbox, Grid, Input, Modal, Pagination, Text } from '@mantine/core';
+import { ActionIcon, Button, Checkbox, Grid, Input, InputWrapper, Modal, Pagination, Text, Textarea } from '@mantine/core';
+import axios from 'axios';
 import { isEmpty, startCase } from 'lodash';
 import * as moment from "moment";
 import React, { useEffect, useState } from 'react'
@@ -7,6 +8,7 @@ import { FaSearch } from 'react-icons/fa';
 import { IoMdArrowDropright, IoMdArrowDropdown } from 'react-icons/io';
 import { MdSavedSearch } from 'react-icons/md';
 import { useDeleteEntryBulkMutation, useGetEntriesQuery } from '../redux/api/form';
+import fileDownload from 'js-file-download';
 
 
 type EntryTableDashboard = {
@@ -17,6 +19,7 @@ type EntryTableDashboard = {
 const EntryTable: React.FC<EntryTableDashboard> = ({formID}) => {
   const [page, setPage] = useState(1);
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [open, setOpen] = useState(false);
   const [deleteEntries,{isLoading,isSuccess}] = useDeleteEntryBulkMutation();
   const [deleteIds,setDeleteIds] = useState<string[]>([])
   const { data,refetch } = useGetEntriesQuery({ formID, page });
@@ -32,6 +35,23 @@ const EntryTable: React.FC<EntryTableDashboard> = ({formID}) => {
     }
     setDeleteIds([...tempIds]);
   }
+
+  const onDownload = () => {
+    axios(`${import.meta.env.VITE_API}/form/download/dataset/${formID}`, {
+      withCredentials: true,
+      method: 'GET',
+      responseType: 'blob',
+      headers: {
+        'Content-Type': 'application/csv',
+      },
+    }).then(({ data }) => {
+      fileDownload(
+        data,
+        `dataset-${moment().format('YYYY-MM-DD HH:mm:ss')}.csv`
+      );
+    });
+  };
+
   useEffect(() => {
     if (isSuccess) {
       refetch()
@@ -45,12 +65,10 @@ const EntryTable: React.FC<EntryTableDashboard> = ({formID}) => {
   }
   return (
     <div style={{ width: '70%', margin: '1rem auto' }}>
-      <Modal
-        size="sm"
-        opened={dialogOpen}
-        onClose={() => setDialogOpen(false)}
-      >
-        <Text>Do you wish to Delete {deleteIds.length} Entries from your form?</Text>
+      <Modal size="sm" opened={dialogOpen} onClose={() => setDialogOpen(false)}>
+        <Text>
+          Do you wish to Delete {deleteIds.length} Entries from your form?
+        </Text>
         <div
           style={{
             display: 'flex',
@@ -62,6 +80,37 @@ const EntryTable: React.FC<EntryTableDashboard> = ({formID}) => {
             Yes,Delete
           </Button>
         </div>
+      </Modal>
+      <Modal size="xl" opened={open} onClose={() => setOpen(false)}>
+        <Grid>
+          <Grid.Col>
+            <InputWrapper label="Subject" description="Subject of the Email">
+              <Input />
+            </InputWrapper>
+          </Grid.Col>
+          <Grid.Col>
+            <InputWrapper
+              label="Email Template"
+              description="EJS Email Template"
+            >
+              <Textarea autosize minRows={10} />
+            </InputWrapper>
+          </Grid.Col>
+          <Grid.Col>
+            <div
+              style={{
+                marginTop: '2rem',
+                display: 'flex',
+                justifyContent: 'right',
+                gap: '1rem',
+              }}
+            >
+              <Button loading={isLoading}>
+                Send Email
+              </Button>
+            </div>
+          </Grid.Col>
+        </Grid>
       </Modal>
       <Table mt={20} variant="unstyled">
         <Thead>
@@ -88,14 +137,22 @@ const EntryTable: React.FC<EntryTableDashboard> = ({formID}) => {
           />
         ))}
       </Table>
-      {!isEmpty(deleteIds) && (
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'right',
-            marginTop: '2rem',
-          }}
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'right',
+          marginTop: '2rem',
+        }}
+      >
+        <Button
+          onClick={onDownload}
+          color="green"
+          variant="outline"
+          mr={10}
         >
+          Download Dataset
+        </Button>
+        {!isEmpty(deleteIds) && (
           <Button
             onClick={() => setDialogOpen(true)}
             color="red"
@@ -103,8 +160,8 @@ const EntryTable: React.FC<EntryTableDashboard> = ({formID}) => {
           >
             Delete Selection of {deleteIds.length} rows
           </Button>
-        </div>
-      )}
+        )}
+      </div>
       <div
         style={{
           display: 'flex',

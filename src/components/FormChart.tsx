@@ -22,7 +22,6 @@ type FormChartsProps = {
 
 const FormChart: React.FC<FormChartsProps> = ({data}) => {
 
-  const [chartData,setChartData]=useState({dates:[],reads:[],writes:[]})
   const theme = useMantineTheme();
   const colorOne = theme.colors[theme.primaryColor.toString()][4];
   const colorTwo = theme.colors[theme.primaryColor.toString()][8];
@@ -34,7 +33,8 @@ const FormChart: React.FC<FormChartsProps> = ({data}) => {
     Title,
     Tooltip,
     Legend
-  );
+    );
+    const [chartData,setChartData]=useState({dates:[],reads:[],writes:[]})
   useEffect(() => {
       const dates: string[] = [];
       const reads: string[] = [];

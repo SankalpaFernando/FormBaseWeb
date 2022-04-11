@@ -12,8 +12,8 @@ type AuthRouteProps = {
 
 
 const AuthRoute: React.FC<AuthRouteProps> = ({children}) => {
-  const isAuthenticated = useSelector((state: RootState) => state.route.isAuthenticated);
-  if(!isAuthenticated) return (<Navigate to="/login" replace />);
+  // const isAuthenticated = useSelector((state: RootState) => state.route.isAuthenticated);
+  // if(!isAuthenticated) return (<Navigate to="/login" replace />);
 
   return children;
 
