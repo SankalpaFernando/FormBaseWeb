@@ -1,6 +1,6 @@
+// @ts-nocheck
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-// @ts-nocheck
 
 type currentProjectType = { id: string; name: string };
 
