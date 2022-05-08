@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import React from 'react';
 import { Alert, Code, Text } from '@mantine/core';
 import NewFormButton from '../../../resources/NewFormButton.png';
@@ -87,11 +89,11 @@ const CreateForm: React.FC = () => {
           resource like images,videos
         </Text>
       </Text>
-      <Alert title="Warning!"  mb={30}>
+      <Alert title="Warning!" mb={30}>
         <Text align="left" color="gray">
           At the time of creation, the form will be on the <b>Test Mode</b>{' '}
-          which will surpass the domain check function. So, prior to the production you need to turn off it
-          manually as described in{' '}
+          which will surpass the domain check function. So, prior to the
+          production you need to turn off it manually as described in{' '}
           <a style={{ color: 'teal' }} href="#">
             here
           </a>

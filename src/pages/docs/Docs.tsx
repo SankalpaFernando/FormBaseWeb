@@ -1,6 +1,8 @@
-import React, { useState } from 'react'
-import {Alert, Box, Button, Input, Text} from "@mantine/core"
-import { FaSearch } from 'react-icons/fa'
+// @ts-nocheck
+
+import React, { useState } from 'react';
+import { Alert, Box, Button, Input, Text } from '@mantine/core';
+import { FaSearch } from 'react-icons/fa';
 import Logo from '../../layout/Logo';
 import { Links } from './Links';
 import { useNavigate } from 'react-router';
@@ -8,7 +10,6 @@ const Docs: React.FC = () => {
   const [component, setComponent] = useState<React.FC>(Links[0].component);
   const [selected, setSelected] = useState(0);
   const [parentId, setParentID] = useState<number | undefined>(0);
-
 
   const navigate = useNavigate();
 
@@ -18,9 +19,7 @@ const Docs: React.FC = () => {
         <Box mt={20}>
           <Logo style={{ fontSize: '2.5rem' }} />
         </Box>
-        <div style={{ width: '100%', margin: 'auto' }}>
-          
-        </div>
+        <div style={{ width: '100%', margin: 'auto' }}></div>
       </div>
       <div
         style={{
@@ -36,7 +35,11 @@ const Docs: React.FC = () => {
             link.type === 'Header' ? (
               <HeaderLink
                 {...link}
-                selected={link.headerID?(parentId===link.headerID):selected === index+1}
+                selected={
+                  link.headerID
+                    ? parentId === link.headerID
+                    : selected === index + 1
+                }
                 onClick={() => {
                   setComponent(link.component);
                   setSelected(index + 1);
@@ -50,7 +53,7 @@ const Docs: React.FC = () => {
                 onClick={() => {
                   setComponent(link.component);
                   setSelected(index + 1);
-                  setParentID(link.parentID)
+                  setParentID(link.parentID);
                 }}
               />
             )
@@ -73,29 +76,37 @@ const Docs: React.FC = () => {
                 justifyContent: 'left',
               }}
             >
-              <Button variant="light" onClick={()=>navigate("/")}>Get Started</Button>
+              <Button variant="light" onClick={() => navigate('/')}>
+                Get Started
+              </Button>
             </div>
           </div>
         </div>
       </div>
     </>
   );
-}
-
+};
 
 type LinksProps = {
   name: string;
   onClick: Function;
   selected: boolean;
-}
+};
 
-const Link:React.FC<LinksProps> = ({name,onClick,selected}) => {
+const Link: React.FC<LinksProps> = ({ name, onClick, selected }) => {
   return (
-    <Text style={selected ? ({fontWeight:"500"}):({fontWeight:"normal"})} sx={{'&:hover':{fontWeight:"500",cursor:"pointer"}}} ml={20} my={5} onClick={onClick} align="left">
+    <Text
+      style={selected ? { fontWeight: '500' } : { fontWeight: 'normal' }}
+      sx={{ '&:hover': { fontWeight: '500', cursor: 'pointer' } }}
+      ml={20}
+      my={5}
+      onClick={onClick}
+      align="left"
+    >
       {name}
     </Text>
   );
-}
+};
 
 const HeaderLink: React.FC<LinksProps> = ({ name, onClick, selected }) => {
   return (

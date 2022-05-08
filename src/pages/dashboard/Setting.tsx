@@ -1,3 +1,4 @@
+// @ts-nocheck
 
 import {
   Badge,
@@ -12,7 +13,7 @@ import {
   Tabs,
   Image,
   RingProgress,
-  ActionIcon
+  ActionIcon,
 } from '@mantine/core';
 import React, { useEffect, useState } from 'react';
 import { GoPlus } from 'react-icons/go';
@@ -24,70 +25,78 @@ import OauthPopup from 'react-oauth-popup';
 import NewTemplate from '../../components/NewTemplate';
 import { useGetTemplateQuery } from '../../redux/api/template';
 import TemplateCard from '../../components/TemplateCard';
-import { useGetCurrentUserQuery, useGetStatsByUserQuery } from '../../redux/api/info';
+import {
+  useGetCurrentUserQuery,
+  useGetStatsByUserQuery,
+} from '../../redux/api/info';
 import { useForm } from '@mantine/form';
 import { isEmpty } from 'lodash';
-import { useDeleteUserMutation, useUpdateUserMutation } from '../../redux/api/user';
+import {
+  useDeleteUserMutation,
+  useUpdateUserMutation,
+} from '../../redux/api/user';
 import { useDispatch } from 'react-redux';
 import { setCurrentUser } from '../../redux/reducer/routes';
 import { useNavigate } from 'react-router-dom';
 import { MdRefresh } from 'react-icons/md';
 
 const Setting: React.FC = () => {
-  
   const [dialogOpen, setDialogOpen] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-
-  const {
-    data: user,
-    isLoading: isUserUpdateLoading
-  } = useGetCurrentUserQuery({});
+  const { data: user, isLoading: isUserUpdateLoading } = useGetCurrentUserQuery(
+    {}
+  );
   const {
     data: stats,
     isLoading: isStatsLoading,
     refetch,
   } = useGetStatsByUserQuery({});
-  const [updateUser,{isSuccess:isUserUpdateSuccess,data:updatedUser}] = useUpdateUserMutation();
-  const [deleteUser, { isSuccess: isUserDeleteSuccess }] = useDeleteUserMutation();
-  
+  const [updateUser, { isSuccess: isUserUpdateSuccess, data: updatedUser }] =
+    useUpdateUserMutation();
+  const [deleteUser, { isSuccess: isUserDeleteSuccess }] =
+    useDeleteUserMutation();
+
   useEffect(() => {
     if (!isEmpty(user)) {
       form.setValues({ ...user });
     }
-  }, [user])
-  
-  useEffect(() => {
-    if (isUserUpdateSuccess) {
-      dispatch(setCurrentUser({...updatedUser.data[0]}))
-    }
-  },[isUserUpdateSuccess])
+  }, [user]);
 
   useEffect(() => {
-    console.log("🚀 ~ file: Setting.tsx ~ line 64 ~ useEffect ~ isUserDeleteSuccess", isUserDeleteSuccess)
-    if (isUserDeleteSuccess) {
-      navigate("/login",{replace:false})
+    if (isUserUpdateSuccess) {
+      dispatch(setCurrentUser({ ...updatedUser.data[0] }));
     }
-    
-  },[isUserDeleteSuccess])
+  }, [isUserUpdateSuccess]);
+
+  useEffect(() => {
+    console.log(
+      '🚀 ~ file: Setting.tsx ~ line 64 ~ useEffect ~ isUserDeleteSuccess',
+      isUserDeleteSuccess
+    );
+    if (isUserDeleteSuccess) {
+      navigate('/login', { replace: false });
+    }
+  }, [isUserDeleteSuccess]);
 
   const form = useForm({
     initialValues: {
-      name: "",
-      email:"",
-      photo:""
-  }})
+      name: '',
+      email: '',
+      photo: '',
+    },
+  });
 
   const onUserUpdate = () => {
     if (!form.validate().hasErrors) {
       updateUser({ userID: user._id, data: { ...form.values } });
     }
-  }
+  };
 
   const onDelete = () => {
     deleteUser({ userID: user._id });
-  }
+  };
   return (
     <>
       <Modal
@@ -176,7 +185,7 @@ const Setting: React.FC = () => {
                 padding: '2rem 4rem',
               }}
             >
-              <div style={{display:"grid", gridTemplateColumns:"5fr 1fr"}}>
+              <div style={{ display: 'grid', gridTemplateColumns: '5fr 1fr' }}>
                 <Text align="left" size="xl" weight="bold" color="gray">
                   Plan
                 </Text>
@@ -200,7 +209,7 @@ const Setting: React.FC = () => {
               <div
                 style={{
                   display: 'grid',
-                  gridTemplateColumns:"1fr 1fr 1fr 1fr",
+                  gridTemplateColumns: '1fr 1fr 1fr 1fr',
                   gap: '1rem',
                   margin: '2rem auto',
                 }}
@@ -298,18 +307,23 @@ type PackageProgressProps = {
   title: string;
   total: number;
   current: number;
-  metrics?:string
-}
+  metrics?: string;
+};
 
-const PackageProgress: React.FC<PackageProgressProps> = ({ title, total, current,metrics }) => {
+const PackageProgress: React.FC<PackageProgressProps> = ({
+  title,
+  total,
+  current,
+  metrics,
+}) => {
   const percentage = (current / total) * 100;
-  let color = "teal";
+  let color = 'teal';
   if (percentage > 80) {
-    color="red"
+    color = 'red';
   } else if (percentage > 50) {
-    color="yellow"
+    color = 'yellow';
   } else if (percentage > 30) {
-    color="green"
+    color = 'green';
   }
   return (
     <div>
@@ -333,8 +347,6 @@ const PackageProgress: React.FC<PackageProgressProps> = ({ title, total, current
       />
     </div>
   );
-}
-
-
+};
 
 export default Setting;

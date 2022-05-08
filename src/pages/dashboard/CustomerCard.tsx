@@ -1,12 +1,30 @@
-import { ActionIcon, Button, Card, Divider, Grid, Input, NumberInput, Radio, SimpleGrid, Text } from '@mantine/core';
+// @ts-nocheck
+
+import {
+  ActionIcon,
+  Button,
+  Card,
+  Divider,
+  Grid,
+  Input,
+  NumberInput,
+  Radio,
+  SimpleGrid,
+  Text,
+} from '@mantine/core';
 import axios from 'axios';
-import React, { ChangeEvent, ChangeEventHandler, useEffect, useState } from 'react';
+import React, {
+  ChangeEvent,
+  ChangeEventHandler,
+  useEffect,
+  useState,
+} from 'react';
 import { FaGoogle } from 'react-icons/fa';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import image from '../resources/bg.png';
 import { Check } from 'tabler-icons-react';
-import * as icon from "../../resources/";
+import * as icon from '../../resources/';
 import { useForm } from '@mantine/form';
 import { useCreateFreeSubscriptionMutation } from '../../redux/api/payment';
 import { setCurrentUser, setIsAuthenticated } from '../../redux/reducer/routes';
@@ -14,11 +32,10 @@ import { isEmpty } from 'lodash';
 import { useNavigate } from 'react-router-dom';
 import { RootState } from '../../redux/store';
 
-type CardType = "master" | "visa" | "americanExpress" | "";
-
+type CardType = 'master' | 'visa' | 'americanExpress' | '';
 
 const CustomerCard: React.FC = () => {
-  const [formType, setFormType] = useState("plan");
+  const [formType, setFormType] = useState('plan');
   const dispatch = useDispatch();
   const [createFreeSubscription] = useCreateFreeSubscriptionMutation();
   const navigate = useNavigate();
@@ -33,20 +50,19 @@ const CustomerCard: React.FC = () => {
           dispatch(setIsAuthenticated(true));
         }
       });
-    }, []);
-    
+  }, []);
+
   const currentUser = useSelector(
     (state: RootState) => state.route.currentUser
-    );
-    
-    const onPlanNext = (type:string) => {
-      if (type === "free") {
-        createFreeSubscription({ userID: currentUser._id }).then(() => {
-          navigate('/');
-          
+  );
+
+  const onPlanNext = (type: string) => {
+    if (type === 'free') {
+      createFreeSubscription({ userID: currentUser._id }).then(() => {
+        navigate('/');
       });
     }
-  }
+  };
 
   return (
     <div
@@ -57,7 +73,12 @@ const CustomerCard: React.FC = () => {
         margin: '5rem auto',
       }}
     >
-      <Card shadow="lg" padding="xl" style={{ padding: '4rem',width:"30%" }} radius="md">
+      <Card
+        shadow="lg"
+        padding="xl"
+        style={{ padding: '4rem', width: '30%' }}
+        radius="md"
+      >
         <Text
           size="xl"
           style={{ fontSize: '2.78rem', fontFamily: 'Rajdhani' }}
@@ -65,10 +86,12 @@ const CustomerCard: React.FC = () => {
           color="gray"
           align="center"
         ></Text>
-        
-        {
-          formType === "payment" ? <Payment onNext={() => { }} onBack={()=>setFormType("plan")} /> : <PaymentPlan onNext={(type) => onPlanNext(type)} />
-        }
+
+        {formType === 'payment' ? (
+          <Payment onNext={() => {}} onBack={() => setFormType('plan')} />
+        ) : (
+          <PaymentPlan onNext={(type) => onPlanNext(type)} />
+        )}
       </Card>
     </div>
   );
@@ -77,23 +100,23 @@ const CustomerCard: React.FC = () => {
 type PaymentProps = {
   onNext: Function;
   onBack: Function;
-}
+};
 
-const Payment: React.FC<PaymentProps> = ({onNext,onBack}) => {
+const Payment: React.FC<PaymentProps> = ({ onNext, onBack }) => {
   const [cardType, setCardType] = useState<CardType>('');
 
   const form = useForm({
     initialValues: {
-      firstName: "",
-      lastName: "",
-      companyName: "",
-      email: "",
-      phoneNumber: "",
-      cvv: "",
-      expiryDate: "",
-      cardNumber:""
-  }})
-
+      firstName: '',
+      lastName: '',
+      companyName: '',
+      email: '',
+      phoneNumber: '',
+      cvv: '',
+      expiryDate: '',
+      cardNumber: '',
+    },
+  });
 
   const onCardNumberChange = (cardNumber: number) => {
     const visaRegex = /^4[0-9]{12}(?:[0-9]{3})?$/.test(cardNumber);
@@ -208,15 +231,15 @@ const Payment: React.FC<PaymentProps> = ({onNext,onBack}) => {
       </div>
     </>
   );
-}
+};
 
 type PaymentPlanProps = {
   onNext: Function;
-  onBack:Function
-}
+  onBack: Function;
+};
 
 const PaymentPlan: React.FC<PaymentPlanProps> = ({ onNext }) => {
-  const [planID, setPlanID] = useState("");
+  const [planID, setPlanID] = useState('');
   return (
     <>
       <PlanCard
@@ -235,52 +258,73 @@ const PaymentPlan: React.FC<PaymentPlanProps> = ({ onNext }) => {
         onSelected={setPlanID}
         planID="c3pm"
       />
-      
+
       <div style={{ display: 'flex', justifyContent: 'right' }}>
-        <Button mt={20} onClick={()=>onNext(planID)} variant="light">
-          {planID==="free"?"Let's Kick of Your Journey":"Next, Choose the Payment Plan"}
+        <Button mt={20} onClick={() => onNext(planID)} variant="light">
+          {planID === 'free'
+            ? "Let's Kick of Your Journey"
+            : 'Next, Choose the Payment Plan'}
         </Button>
       </div>
     </>
   );
-}
+};
 
 type PlanCardProps = {
   name: string;
   description: string;
   price: number;
   selected: boolean;
-  onSelected: (planID:string) => void;
+  onSelected: (planID: string) => void;
   planID: string;
-}
+};
 
-const PlanCard: React.FC<PlanCardProps> = ({name,description,price,selected,onSelected,planID}) => {
-  const onCheck = (e:ChangeEvent<HTMLInputElement>) => {
+const PlanCard: React.FC<PlanCardProps> = ({
+  name,
+  description,
+  price,
+  selected,
+  onSelected,
+  planID,
+}) => {
+  const onCheck = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.checked) {
       onSelected(planID);
     }
-  }
+  };
 
   return (
     <Card>
       <div style={{ display: 'flex', gridTemplateColumns: '1fr 2fr 1fr' }}>
-        <Radio checked={selected} onChange={onCheck} mt={5} style={{display:"flex",alignItems:"start"}} />
-        <div style={{paddingTop:"0rem"}}>
-          <Text color="gray" size="xl" mb={10} style={{ fontWeight: "bold" }} align='left'>{name} Plan</Text>
+        <Radio
+          checked={selected}
+          onChange={onCheck}
+          mt={5}
+          style={{ display: 'flex', alignItems: 'start' }}
+        />
+        <div style={{ paddingTop: '0rem' }}>
+          <Text
+            color="gray"
+            size="xl"
+            mb={10}
+            style={{ fontWeight: 'bold' }}
+            align="left"
+          >
+            {name} Plan
+          </Text>
           <Text
             color="gray"
             dangerouslySetInnerHTML={{
-              __html:
-                description,
+              __html: description,
             }}
             align="left"
-            style={{width:"350px"}}
+            style={{ width: '350px' }}
           ></Text>
         </div>
         <Text>${price}</Text>
       </div>
     </Card>
   );
-}
+};
 
 export default CustomerCard;

@@ -1,23 +1,25 @@
-import React from "react";
-import AddPlugin from "./pages/AddPlugin";
-import APIURL from "./pages/APIURL";
-import ConfiguringForm from "./pages/ConfiguringForm";
-import CreateForm from "./pages/CreateForm";
-import CreateProject from "./pages/CreateProject";
-import CreateTemplate from "./pages/CreateTemplate";
-import CreateWebhook from "./pages/CreateWebhook";
-import ExportDataset from "./pages/ExportDatset";
+// @ts-nocheck
 
-import Introduction from "./pages/Introduction";
-import SendEmails from "./pages/SendEmails";
+import React from 'react';
+import AddPlugin from './pages/AddPlugin';
+import APIURL from './pages/APIURL';
+import ConfiguringForm from './pages/ConfiguringForm';
+import CreateForm from './pages/CreateForm';
+import CreateProject from './pages/CreateProject';
+import CreateTemplate from './pages/CreateTemplate';
+import CreateWebhook from './pages/CreateWebhook';
+import ExportDataset from './pages/ExportDatset';
+
+import Introduction from './pages/Introduction';
+import SendEmails from './pages/SendEmails';
 
 type LinkType = {
   name: string;
   component: React.FC;
-  type: "Header" | "Page";
+  type: 'Header' | 'Page';
   headerID?: number;
   parentID?: number;
-}
+};
 
 export const Links: LinkType[] = [
   {
@@ -92,7 +94,6 @@ export const Links: LinkType[] = [
     parentID: 1,
   },
 ];
-
 
 // <div>
 //           <Text align="left" size="xl">

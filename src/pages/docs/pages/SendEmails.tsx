@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import React from 'react';
 import { Alert, Code, Text } from '@mantine/core';
 import MailSetting from '../../../resources/MailSetting.png';
@@ -98,7 +100,10 @@ const ConfiguringForm: React.FC = () => {
       </Alert>
       <Text align="left" color="gray" my={30}>
         <Text mt={10}>
-          After that click <b>Send Email</b> button. After that you will get message saying that the email sending transaction has been recorded then you can continue your work and after the email sending completed Formbase will notify you.
+          After that click <b>Send Email</b> button. After that you will get
+          message saying that the email sending transaction has been recorded
+          then you can continue your work and after the email sending completed
+          Formbase will notify you.
         </Text>
       </Text>
       <Text
@@ -112,10 +117,10 @@ const ConfiguringForm: React.FC = () => {
       </Text>
       <Text align="left" color="gray" my={30}>
         <Text mt={10}>
-          Formbase let you to download the email list as a Spreadsheet that were recorder in the Mail Section through <b>Download Email List</b>
+          Formbase let you to download the email list as a Spreadsheet that were
+          recorder in the Mail Section through <b>Download Email List</b>
         </Text>
         <Text mt={10}>
-          
           <div
             style={{
               display: 'flex',
@@ -125,7 +130,6 @@ const ConfiguringForm: React.FC = () => {
           >
             <img width={200} height={0} src={DownloadEmail} />
           </div>
-          
         </Text>
       </Text>
     </>

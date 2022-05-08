@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import React from 'react';
 import { Text } from '@mantine/core';
 import NewProjectButton from '../../../resources/NewProject.png';

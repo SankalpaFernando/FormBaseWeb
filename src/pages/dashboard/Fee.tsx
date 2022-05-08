@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import { ActionIcon, Button, Card, Radio, Text } from '@mantine/core';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
@@ -110,7 +112,7 @@ const PaymentCard: React.FC<PaymentCardProps> = ({
   price,
   dataset,
   selected,
-  onClick
+  onClick,
 }) => {
   return (
     <Card
@@ -125,7 +127,11 @@ const PaymentCard: React.FC<PaymentCardProps> = ({
       shadow="lg"
       radius="md"
       padding="xl"
-      style={{ padding: '1.8rem', width: '35rem', ...(selected && { border: '3px solid #3ab886' }) }}
+      style={{
+        padding: '1.8rem',
+        width: '35rem',
+        ...(selected && { border: '3px solid #3ab886' }),
+      }}
       my={20}
     >
       <div style={{ display: 'grid', gridTemplateColumns: '4fr 1fr' }}>

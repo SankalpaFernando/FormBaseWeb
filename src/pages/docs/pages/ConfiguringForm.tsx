@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import React from 'react';
 import { Alert, Code, Text } from '@mantine/core';
 import FormSetting from '../../../resources/FormSetting.png';

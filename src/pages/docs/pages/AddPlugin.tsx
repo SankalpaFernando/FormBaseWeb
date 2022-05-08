@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import React from 'react';
 import { Alert, Code, Text } from '@mantine/core';
 import PluginTab from '../../../resources/PluginTab.png';
@@ -38,7 +40,8 @@ const AddPlugin: React.FC = () => {
         Streaming Data to Google Sheets
       </Text>
       <Text align="left" color="gray" mt={30}>
-        After navigating to the <b>Plugin</b> Tab, you could see <b>Google Sheet</b> plugin Card as follow.
+        After navigating to the <b>Plugin</b> Tab, you could see{' '}
+        <b>Google Sheet</b> plugin Card as follow.
       </Text>
       <div
         style={{
@@ -50,8 +53,11 @@ const AddPlugin: React.FC = () => {
         <img width={250} height={0} src={PluginCard} />
       </div>
       <Text align="left" color="gray" my={30}>
-        To use Plugin, first you need to <b>authorize</b> the service. Therefore, click on the <b>Authorize</b> Button in the <b>Google Sheet Plugin Card</b>, which will popup a oauth dialog. After authorizing the Google Sheet
-        a dialog will popup as follow with all the <b>Existing Spreadsheets</b> in your account.
+        To use Plugin, first you need to <b>authorize</b> the service.
+        Therefore, click on the <b>Authorize</b> Button in the{' '}
+        <b>Google Sheet Plugin Card</b>, which will popup a oauth dialog. After
+        authorizing the Google Sheet a dialog will popup as follow with all the{' '}
+        <b>Existing Spreadsheets</b> in your account.
       </Text>
       <div
         style={{
@@ -63,7 +69,8 @@ const AddPlugin: React.FC = () => {
         <img width={500} height={0} src={SpreadSheet} />
       </div>
       <Text align="left" color="gray" my={30}>
-        Then select a SpreadSheet from the dropdown and click <b>Confirm</b> Button to complete the adding of Spreadsheet Plugin
+        Then select a SpreadSheet from the dropdown and click <b>Confirm</b>{' '}
+        Button to complete the adding of Spreadsheet Plugin
       </Text>
     </>
   );

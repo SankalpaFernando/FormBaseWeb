@@ -1,3 +1,4 @@
+// @ts-nocheck
 import {
   Badge,
   Button,
@@ -86,7 +87,7 @@ const FormSetting: React.FC<FormSettingProps> = ({
       updateForm({ formID, body: { ...form.values } });
     }
   };
-  
+
   useEffect(() => {
     if (formObj) {
       form.setValues({ ...formObj.data[0] });
@@ -94,7 +95,7 @@ const FormSetting: React.FC<FormSettingProps> = ({
         (plugin) => plugin.name == 'Gmail'
       );
       if (gmailPlugin !== undefined) {
-        const {access_token,refresh_token } = gmailPlugin;
+        const { access_token, refresh_token } = gmailPlugin;
         form.setFieldValue('googleCode', { access_token, refresh_token });
       }
     }
@@ -126,7 +127,10 @@ const FormSetting: React.FC<FormSettingProps> = ({
     }
   }, [isDeleteAllSuccess, isDeleteFormSuccess]);
   const onAuthCode = async (code: string) => {
-  console.log("🚀 ~ file: FormSetting.tsx ~ line 129 ~ onAuthCode ~ code", code)
+    console.log(
+      '🚀 ~ file: FormSetting.tsx ~ line 129 ~ onAuthCode ~ code',
+      code
+    );
     try {
       axios
         .get(`${import.meta.env.VITE_API}/plugin/google/code?code=${code}`, {
@@ -134,9 +138,15 @@ const FormSetting: React.FC<FormSettingProps> = ({
         })
         .then((res) => {
           const { access_token, refresh_token } = res.data;
-          axios.post(`${import.meta.env.VITE_API}/plugin/add?formID=${formID}`, { name: "Gmail", access_token, refresh_token },{withCredentials:true}).then(() => {
-            form.setFieldValue('googleCode', { access_token, refresh_token });
-          })
+          axios
+            .post(
+              `${import.meta.env.VITE_API}/plugin/add?formID=${formID}`,
+              { name: 'Gmail', access_token, refresh_token },
+              { withCredentials: true }
+            )
+            .then(() => {
+              form.setFieldValue('googleCode', { access_token, refresh_token });
+            });
         });
     } catch (e) {
       console.error(e);
@@ -148,7 +158,7 @@ const FormSetting: React.FC<FormSettingProps> = ({
       description: '',
       testModeOn: false,
       origins: [],
-      plugins:[],
+      plugins: [],
       redirectURL: '',
       accessToken: '',
       templateID: '',
@@ -321,7 +331,7 @@ const FormSetting: React.FC<FormSettingProps> = ({
             <InputWrapper
               style={{ textAlign: 'left' }}
               id="projectName"
-              mt={form.getInputProps('googleCode').value === undefined?5:20}
+              mt={form.getInputProps('googleCode').value === undefined ? 5 : 20}
               label="Allowed Origins"
               description="Please Enter the Origins that are allowed"
               error={form.errors.origins}

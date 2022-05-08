@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import React from 'react';
 import { Alert, Code, Text } from '@mantine/core';
 import FormTab from '../../../resources/FormTab.png';
@@ -18,7 +20,8 @@ const CreateWebhook: React.FC = () => {
         success of data submission by creating a <b>Webhook</b>.
       </Text>
       <Text align="left" color="gray" mt={10}>
-        To access Webhooks in the Form's <b>Setting</b> page, navigate to the <b>Webhook</b> Tab
+        To access Webhooks in the Form's <b>Setting</b> page, navigate to the{' '}
+        <b>Webhook</b> Tab
       </Text>
       <div
         style={{
@@ -88,9 +91,7 @@ const CreateWebhook: React.FC = () => {
       </Text>
       <Text align="left" color="gray" my={30}>
         <b>Access Token</b>
-        <Text mt={10}>
-          The Access Token for your external API or service
-        </Text>
+        <Text mt={10}>The Access Token for your external API or service</Text>
       </Text>
       <Text align="left" color="gray" my={30}>
         At the end click <b>Create Webhook</b> Button

@@ -1,8 +1,10 @@
-import React from 'react'
+// @ts-nocheck
+
+import React from 'react';
 import { Text } from '@mantine/core';
 import flow from '../../../resources/flow.svg';
 
-const Introduction:React.FC=()=> {
+const Introduction: React.FC = () => {
   return (
     <>
       <Text style={{ fontSize: '2rem' }} color="teal" align="left">
@@ -24,6 +26,6 @@ const Introduction:React.FC=()=> {
       </div>
     </>
   );
-}
+};
 
 export default Introduction;

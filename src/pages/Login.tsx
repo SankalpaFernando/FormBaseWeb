@@ -1,18 +1,20 @@
-import { Button, Card, Text } from '@mantine/core'
+// @ts-nocheck
+
+import { Button, Card, Text } from '@mantine/core';
 import axios from 'axios';
-import React, { useEffect, useState } from 'react'
-import { FaGoogle } from 'react-icons/fa'
+import React, { useEffect, useState } from 'react';
+import { FaGoogle } from 'react-icons/fa';
 import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { setCurrentUser, setIsAuthenticated } from '../redux/reducer/routes';
-import image from "../resources/bg.png";
+import image from '../resources/bg.png';
 const Login: React.FC = () => {
   const [signUp, setSignUp] = useState(true);
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const onAuth = () => {
     window.location.href = `${import.meta.env.VITE_API}/auth`;
-  }
-  
+  };
+
   return (
     <div
       style={{
@@ -29,7 +31,13 @@ const Login: React.FC = () => {
             ? 'New to Formbase ? Sign Up!'
             : 'Already Have an Account ? Sign In!'}
         </Text>
-        <Button onClick={onAuth} size="lg" variant="light" fullWidth leftIcon={<FaGoogle />}>
+        <Button
+          onClick={onAuth}
+          size="lg"
+          variant="light"
+          fullWidth
+          leftIcon={<FaGoogle />}
+        >
           {signUp ? 'Sign Up with Google' : 'Sign In with Google'}
         </Button>
         <Text color="gray" size="sm" mt={30}>
@@ -48,6 +56,6 @@ const Login: React.FC = () => {
       </Card>
     </div>
   );
-}
+};
 
-export default Login
+export default Login;

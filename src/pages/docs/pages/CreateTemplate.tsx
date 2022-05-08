@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import React from 'react';
 import { Alert, Code, Text } from '@mantine/core';
 import TemplateTypes from '../../../resources/TemplateTypes.png';
@@ -50,9 +52,7 @@ const CreateTemplate: React.FC = () => {
       </div>
       <Text align="left" color="gray" my={30}>
         <b>Subject</b>
-        <Text mt={10}>
-          This Specify the Subject of the Email 
-        </Text>
+        <Text mt={10}>This Specify the Subject of the Email</Text>
         <Text mt={5}>
           To add a domain, enter the full form of the domain and press enter,
           for an instance <Code>https://web.dev</Code>

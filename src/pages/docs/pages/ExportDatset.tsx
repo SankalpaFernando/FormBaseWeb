@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import React from 'react';
 import { Alert, Code, Text } from '@mantine/core';
 import DataTab from '../../../resources/DataTab.png';
@@ -62,8 +64,8 @@ const ExportDataset: React.FC = () => {
       </Text>
       <Text align="left" color="gray" my={30}>
         <Text mt={10}>
-          You can export the Data set as a Spreadsheet by clicking the <b>Download Dataset</b>{' '}
-          button
+          You can export the Data set as a Spreadsheet by clicking the{' '}
+          <b>Download Dataset</b> button
         </Text>
       </Text>
       <div

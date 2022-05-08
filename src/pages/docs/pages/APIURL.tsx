@@ -1,15 +1,14 @@
+// @ts-nocheck
+
 import React from 'react';
 import { Alert, Box, Code, Text } from '@mantine/core';
 import PluginTab from '../../../resources/PluginTab.png';
 import PluginCard from '../../../resources/PluginCard.png';
 import SpreadSheet from '../../../resources/SpreadSheet.png';
 import { Tag } from '@chakra-ui/react';
-import {Prism} from "@mantine/prism";
-
+import { Prism } from '@mantine/prism';
 
 const APIURL: React.FC = () => {
-
-
   return (
     <>
       <Text style={{ fontSize: '1rem' }} color="teal" align="left">
