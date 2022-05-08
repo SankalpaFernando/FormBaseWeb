@@ -1,3 +1,4 @@
+// @ts-nocheck
 
 import {
   Badge,
@@ -80,7 +81,7 @@ const NewForm: React.FC<NewFormProps> = ({ projectID, onSuccessCallback }) => {
             ? 'Need to Authenticate Google Email Service'
             : null
           : null,
-      templateID: (value:string) =>
+      templateID: (value: string) =>
         form.getInputProps('enableEmailNotification').value
           ? isEmpty(value)
             ? 'Need to provide a Template'
@@ -104,14 +105,14 @@ const NewForm: React.FC<NewFormProps> = ({ projectID, onSuccessCallback }) => {
     const descriptionError =
       active === 0 && form.validateField('description').hasError;
     const originError = active === 1 && form.validateField('origins').hasError;
-    const authError =
-      active === 0 && (form.validateField('googleCode').hasError);
+    const authError = active === 0 && form.validateField('googleCode').hasError;
     const templateError =
       active === 0 && form.validateField('templateID').hasError;
     const redirectURLError =
       active === 1 && form.validateField('redirectURL').hasError;
-     
-    const formDetailHasError = nameError || descriptionError || authError || templateError;
+
+    const formDetailHasError =
+      nameError || descriptionError || authError || templateError;
     const formConfigurationHasError = originError || redirectURLError;
 
     if (!formDetailHasError && !formConfigurationHasError)
@@ -124,16 +125,14 @@ const NewForm: React.FC<NewFormProps> = ({ projectID, onSuccessCallback }) => {
   };
   return (
     <div>
-      <Stepper  active={active}>
+      <Stepper active={active}>
         <Stepper.Step label="Details" icon={<BiDetail />}>
           <FormDetails form={form} />
         </Stepper.Step>
         <Stepper.Step label="Configuration" icon={<GrConfigure />}>
           <FormConfiguration form={form} />
         </Stepper.Step>
-        <Stepper.Step icon={null} style={{display:"none"}}>
-
-        </Stepper.Step>
+        <Stepper.Step icon={null} style={{ display: 'none' }}></Stepper.Step>
       </Stepper>
       <div
         style={{
@@ -168,7 +167,9 @@ const FormDetails: React.FC<{ form: ReturnType<typeof useForm> }> = ({
   const onAuthCode = async (code: string) => {
     try {
       axios
-        .get(`${import.meta.env.VITE_API}/plugin/google/code?code=${code}`,{withCredentials:true})
+        .get(`${import.meta.env.VITE_API}/plugin/google/code?code=${code}`, {
+          withCredentials: true,
+        })
         .then((res) => {
           const { access_token, refresh_token } = res.data;
           form.setFieldValue('googleCode', { access_token, refresh_token });
@@ -257,7 +258,7 @@ const FormDetails: React.FC<{ form: ReturnType<typeof useForm> }> = ({
             import.meta.env.VITE_CALLBACK_URL
           }%2Fgoogle%2Fredirect`}
           onCode={onAuthCode}
-          onClose={() => { }}
+          onClose={() => {}}
         >
           <Button leftIcon={<FaGoogle />} variant="light">
             Authenticate Google
@@ -336,6 +337,5 @@ const FormConfiguration: React.FC<{ form: any }> = ({ form }) => {
     </Grid>
   );
 };
-
 
 export default NewForm;
