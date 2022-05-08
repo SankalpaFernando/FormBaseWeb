@@ -1,4 +1,3 @@
-// @ts-nocheck
 
 import {
   Badge,
@@ -45,6 +44,7 @@ type NewFormProps = {
 const NewForm: React.FC<NewFormProps> = ({ projectID, onSuccessCallback }) => {
   const [active, setActive] = useState(0);
   const [addForm, { isLoading, isSuccess }] = useAddFormMutation();
+  console.log(import.meta.env.VITE_CALLBACk_URL);
   const form = useForm({
     initialValues: {
       name: '',
@@ -80,6 +80,12 @@ const NewForm: React.FC<NewFormProps> = ({ projectID, onSuccessCallback }) => {
             ? 'Need to Authenticate Google Email Service'
             : null
           : null,
+      templateID: (value:string) =>
+        form.getInputProps('enableEmailNotification').value
+          ? isEmpty(value)
+            ? 'Need to provide a Template'
+            : null
+          : null,
     },
   });
   const toast = useToast();
@@ -98,11 +104,14 @@ const NewForm: React.FC<NewFormProps> = ({ projectID, onSuccessCallback }) => {
     const descriptionError =
       active === 0 && form.validateField('description').hasError;
     const originError = active === 1 && form.validateField('origins').hasError;
-    const authError = active === 0 && form.validateField('googleCode').hasError;
+    const authError =
+      active === 0 && (form.validateField('googleCode').hasError);
+    const templateError =
+      active === 0 && form.validateField('templateID').hasError;
     const redirectURLError =
       active === 1 && form.validateField('redirectURL').hasError;
-
-    const formDetailHasError = nameError || descriptionError || authError;
+     
+    const formDetailHasError = nameError || descriptionError || authError || templateError;
     const formConfigurationHasError = originError || redirectURLError;
 
     if (!formDetailHasError && !formConfigurationHasError)
@@ -115,15 +124,15 @@ const NewForm: React.FC<NewFormProps> = ({ projectID, onSuccessCallback }) => {
   };
   return (
     <div>
-      <Stepper active={active}>
+      <Stepper  active={active}>
         <Stepper.Step label="Details" icon={<BiDetail />}>
           <FormDetails form={form} />
         </Stepper.Step>
         <Stepper.Step label="Configuration" icon={<GrConfigure />}>
           <FormConfiguration form={form} />
         </Stepper.Step>
-        <Stepper.Step label="Plugins" icon={<BsPlug />}>
-          <PluginConfiguration form={form} />
+        <Stepper.Step icon={null} style={{display:"none"}}>
+
         </Stepper.Step>
       </Stepper>
       <div
@@ -139,7 +148,7 @@ const NewForm: React.FC<NewFormProps> = ({ projectID, onSuccessCallback }) => {
             Back
           </Button>
         )}
-        {active != 2 ? (
+        {active != 1 ? (
           <Button onClick={onValidNext}>Next</Button>
         ) : (
           <Button loading={isLoading} onClick={onFinish}>
@@ -159,7 +168,7 @@ const FormDetails: React.FC<{ form: ReturnType<typeof useForm> }> = ({
   const onAuthCode = async (code: string) => {
     try {
       axios
-        .get(`${import.meta.env.VITE_API}/plugin/google/code?code=${code}`)
+        .get(`${import.meta.env.VITE_API}/plugin/google/code?code=${code}`,{withCredentials:true})
         .then((res) => {
           const { access_token, refresh_token } = res.data;
           form.setFieldValue('googleCode', { access_token, refresh_token });
@@ -242,11 +251,13 @@ const FormDetails: React.FC<{ form: ReturnType<typeof useForm> }> = ({
             ></Select>
           </InputWrapper>
         </Grid.Col>
+
         <OauthPopup
           url={`https://accounts.google.com/o/oauth2/v2/auth?access_type=offline&prompt=consent&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fgmail.send%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email&state=formID&response_type=code&client_id=825212325994-r4tngsvhg637e1kkkot7uin9jphd6plg.apps.googleusercontent.com&redirect_uri=${
             import.meta.env.VITE_CALLBACK_URL
           }%2Fgoogle%2Fredirect`}
           onCode={onAuthCode}
+          onClose={() => { }}
         >
           <Button leftIcon={<FaGoogle />} variant="light">
             Authenticate Google
@@ -326,47 +337,5 @@ const FormConfiguration: React.FC<{ form: any }> = ({ form }) => {
   );
 };
 
-const PluginConfiguration: React.FC = () => {
-  return (
-    <Grid>
-      <Grid.Col>
-        <InputWrapper
-          id="plugin"
-          label="Plugins"
-          description="Please Select Plugins to Configure with Project"
-        >
-          <Input id="plugin" />
-        </InputWrapper>
-      </Grid.Col>
-      <Grid.Col>
-        <SimpleGrid
-          cols={2}
-          style={{ width: '95%', margin: 'auto', marginTop: '.8rem' }}
-        >
-          <PluginCard
-            icon={slack}
-            name="Slack"
-            description="Configure to receive message to a channel when a Form Submission happens"
-          />
-          <PluginCard
-            icon={discord}
-            name="Discord"
-            description="Configure to receive message to a discord channel when a form get submitted"
-          />
-          <PluginCard
-            icon={trello}
-            name="Trello"
-            description="Configure to create a card from a form submission"
-          />
-          <PluginCard
-            icon={googlesheet}
-            name="Google Sheet"
-            description="Configure to append the submitted data to a google sheet"
-          />
-        </SimpleGrid>
-      </Grid.Col>
-    </Grid>
-  );
-};
 
 export default NewForm;

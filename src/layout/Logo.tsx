@@ -3,7 +3,11 @@
 import { Group, Text, useMantineTheme } from '@mantine/core';
 import React from 'react';
 
-const Logo: React.FC = () => {
+type LogoProps = {
+  style?:Object
+}
+
+const Logo: React.FC<LogoProps> = ({style}) => {
   const theme = useMantineTheme();
 
   return (
@@ -20,7 +24,7 @@ const Logo: React.FC = () => {
       }}
     >
       <Group position="apart">
-        <Text size="xl" style={{ fontFamily: 'Montserrat Alternates' }}>
+        <Text size="xl" style={{ fontFamily: 'Montserrat Alternates',...style }}>
           <span
             style={
               {

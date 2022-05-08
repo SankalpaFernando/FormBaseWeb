@@ -1,5 +1,3 @@
-// @ts-nocheck
-
 import {
   Badge,
   Button,
@@ -23,7 +21,7 @@ import React, { useEffect, useState, KeyboardEvent } from 'react';
 import { GoPlus } from 'react-icons/go';
 import { FiSearch, FiSettings } from 'react-icons/fi';
 import { useForm } from '@mantine/form';
-import { FaWpforms } from 'react-icons/fa';
+import { FaGoogle, FaWpforms } from 'react-icons/fa';
 import { isEmpty } from 'lodash';
 import { useNavigate, useParams } from 'react-router';
 import { Thead, useToast } from '@chakra-ui/react';
@@ -51,6 +49,8 @@ import {
 import { Cross1Icon } from '@modulz/radix-icons';
 import { formObjectType } from '../utils/customTypes';
 import { useGetAllTemplateQuery } from '../redux/api/template';
+import OauthPopup from 'react-oauth-popup';
+import axios from 'axios';
 
 type FormSettingProps = {
   formID: string;
@@ -86,14 +86,17 @@ const FormSetting: React.FC<FormSettingProps> = ({
       updateForm({ formID, body: { ...form.values } });
     }
   };
-
+  
   useEffect(() => {
     if (formObj) {
-      console.log(
-        '🚀 ~ file: FormSetting.tsx ~ line 73 ~ useEffect ~ formObj',
-        formObj
-      );
       form.setValues({ ...formObj.data[0] });
+      const gmailPlugin = formObj.data[0].plugins.find(
+        (plugin) => plugin.name == 'Gmail'
+      );
+      if (gmailPlugin !== undefined) {
+        const {access_token,refresh_token } = gmailPlugin;
+        form.setFieldValue('googleCode', { access_token, refresh_token });
+      }
     }
   }, [formObj]);
   useEffect(() => {
@@ -122,16 +125,38 @@ const FormSetting: React.FC<FormSettingProps> = ({
       refetch();
     }
   }, [isDeleteAllSuccess, isDeleteFormSuccess]);
+  const onAuthCode = async (code: string) => {
+  console.log("🚀 ~ file: FormSetting.tsx ~ line 129 ~ onAuthCode ~ code", code)
+    try {
+      axios
+        .get(`${import.meta.env.VITE_API}/plugin/google/code?code=${code}`, {
+          withCredentials: true,
+        })
+        .then((res) => {
+          const { access_token, refresh_token } = res.data;
+          axios.post(`${import.meta.env.VITE_API}/plugin/add?formID=${formID}`, { name: "Gmail", access_token, refresh_token },{withCredentials:true}).then(() => {
+            form.setFieldValue('googleCode', { access_token, refresh_token });
+          })
+        });
+    } catch (e) {
+      console.error(e);
+    }
+  };
   const form = useForm({
     initialValues: {
       name: '',
       description: '',
       testModeOn: false,
       origins: [],
+      plugins:[],
       redirectURL: '',
       accessToken: '',
       templateID: '',
       enableEmailNotification: false,
+      googleCode: {
+        access_token: '',
+        refresh_token: '',
+      },
     },
     validate: {
       name: (value: string) =>
@@ -273,10 +298,30 @@ const FormSetting: React.FC<FormSettingProps> = ({
                 onChange={form.getInputProps('templateID').onChange}
               ></Select>
             </InputWrapper>
+            {form.getInputProps('googleCode').value === undefined && (
+              <div
+                style={{
+                  display: 'flex',
+                  justifyContent: 'right',
+                  marginTop: '1.4rem',
+                }}
+              >
+                <OauthPopup
+                  url={`https://accounts.google.com/o/oauth2/v2/auth?access_type=offline&prompt=consent&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fgmail.send%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email&state=formID&response_type=code&client_id=825212325994-r4tngsvhg637e1kkkot7uin9jphd6plg.apps.googleusercontent.com&redirect_uri=${
+                    import.meta.env.VITE_CALLBACK_URL
+                  }%2Fgoogle%2Fredirect`}
+                  onCode={onAuthCode}
+                >
+                  <Button leftIcon={<FaGoogle />} variant="light">
+                    Authenticate Google
+                  </Button>
+                </OauthPopup>
+              </div>
+            )}
             <InputWrapper
               style={{ textAlign: 'left' }}
               id="projectName"
-              mt={10}
+              mt={form.getInputProps('googleCode').value === undefined?5:20}
               label="Allowed Origins"
               description="Please Enter the Origins that are allowed"
               error={form.errors.origins}

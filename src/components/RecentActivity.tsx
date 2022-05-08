@@ -1,6 +1,6 @@
 // @ts-nocheck
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   Table,
   Thead,
@@ -34,8 +34,10 @@ const RecentActivity: React.FC = () => {
   const theme = useMantineTheme();
   const color = theme.colors[theme.primaryColor.toString()][4];
 
-  const { data: recentActivities, isLoading } = useGetLatestLogQuery({});
-
+  const { data: recentActivities, isLoading,refetch } = useGetLatestLogQuery({});
+  useEffect(() => {
+    refetch();
+  }, []);
   return (
     <Card shadow="xl" radius="lg" padding="xl">
       <Text

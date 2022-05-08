@@ -29,6 +29,7 @@ import React, { useEffect, useState } from 'react';
 import { FaSearch } from 'react-icons/fa';
 import { IoMdArrowDropright, IoMdArrowDropdown } from 'react-icons/io';
 import { MdSavedSearch } from 'react-icons/md';
+import { MdRefresh } from 'react-icons/md';
 import {
   useDeleteEntryBulkMutation,
   useGetEntriesQuery,
@@ -92,6 +93,11 @@ const EntryTable: React.FC<EntryTableDashboard> = ({ formID }) => {
   };
   return (
     <div style={{ width: '70%', margin: '1rem auto' }}>
+      <div style={{ display: 'flex', justifyContent: 'right' }}>
+        <ActionIcon onClick={refetch} size="md">
+          <MdRefresh />
+        </ActionIcon>
+      </div>
       <Modal size="sm" opened={dialogOpen} onClose={() => setDialogOpen(false)}>
         <Text>
           Do you wish to Delete {deleteIds.length} Entries from your form?
@@ -137,7 +143,7 @@ const EntryTable: React.FC<EntryTableDashboard> = ({ formID }) => {
           </Grid.Col>
         </Grid>
       </Modal>
-      <Table mt={20} variant="unstyled">
+      <Table mt={10} variant="unstyled">
         <Thead>
           <Tr>
             <Th width="5%"></Th>
@@ -261,7 +267,7 @@ const DetailCard: React.FC<DetailCardProps> = ({
             <Td>
               <b>Date</b>
               <div style={{ margin: '2rem 0' }}>
-                <p>{date.format('YYYY MMMM DD')}</p>
+                <p>{date.format('YYYY MMMM DD HH:mm:ss')}</p>
               </div>
             </Td>
             <Td>

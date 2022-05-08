@@ -15,6 +15,8 @@ export const infoAPI = createApi({
     getTemplateInfo: builder.query({ query: () => `/info/count/template` }),
     getLatestLog: builder.query({ query: () => `/logs/latest` }),
     getTotalSubmits: builder.query({ query: () => `/logs/charts` }),
+    getCurrentUser: builder.query({ query: () => `/auth/user` }),
+    getStatsByUser: builder.query({query:()=>`/logs/stats/user`})
   }),
 });
 
@@ -25,4 +27,6 @@ export const {
   useGetTemplateInfoQuery,
   useGetLatestLogQuery,
   useGetTotalSubmitsQuery,
+  useGetCurrentUserQuery,
+  useGetStatsByUserQuery
 } = infoAPI;

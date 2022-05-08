@@ -32,19 +32,12 @@ const PluginCard: React.FC<PluginCardProps> = ({
   const toast = useToast();
   const onAuthCode = async (code: string) => {
     const baseURL = `${import.meta.env.VITE_API}/plugin`;
-    console.log(
-      '🚀 ~ file: PluginCard.tsx ~ line 27 ~ onAuthCode ~ code',
-      code
-    );
     try {
+      axios.defaults.withCredentials = true;
       axios
         .get(`${baseURL}/google/code?code=${code}`)
         .then((res) => res.data)
         .then((data) => {
-          console.log(
-            '🚀 ~ file: PluginCard.tsx ~ line 31 ~ onAuthCode ~ data',
-            data
-          );
           axios
             .post(`${baseURL}/add?formID=${formID}`, {
               access_token: data.access_token,
@@ -74,9 +67,13 @@ const PluginCard: React.FC<PluginCardProps> = ({
                     onCancel: () => console.log('Cancel'),
                     onConfirm: () => {
                       axios
-                        .put(`${baseURL}/sheet/${formID}`, {
-                          sheetID: documentId,
-                        })
+                        .put(
+                          `${baseURL}/sheet/${formID}`,
+                          {
+                            sheetID: documentId,
+                          },
+                          { withCredentials: true }
+                        )
                         .then((res) => {
                           modals.closeAll();
                           toast({
@@ -94,7 +91,6 @@ const PluginCard: React.FC<PluginCardProps> = ({
       console.error(e);
     }
   };
-
   return (
     <Box
       className="plugin-card"
@@ -135,7 +131,7 @@ const PluginCard: React.FC<PluginCardProps> = ({
         ) : (
           <>
             <OauthPopup
-              url="https://accounts.google.com/o/oauth2/v2/auth?access_type=offline&prompt=consent&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fspreadsheets%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fdrive%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fspreadsheets&state=formID&response_type=code&client_id=825212325994-r4tngsvhg637e1kkkot7uin9jphd6plg.apps.googleusercontent.com&redirect_uri=${import.meta.env.VITE_CALLBACK_URL}%2Fgoogle%2Fredirect"
+              url={`https://accounts.google.com/o/oauth2/v2/auth?access_type=offline&prompt=consent&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fspreadsheets%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fdrive%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fspreadsheets&state=formID&response_type=code&client_id=825212325994-r4tngsvhg637e1kkkot7uin9jphd6plg.apps.googleusercontent.com&redirect_uri=${import.meta.env.VITE_CALLBACK_URL}%2Fgoogle%2Fredirect`}
               onCode={onAuthCode}
             >
               <Button>Authorize</Button>

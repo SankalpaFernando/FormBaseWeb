@@ -1,0 +1,36 @@
+.tableRow:hover {
+  background-color: #ebfbef;
+  cursor: pointer;
+}
+
+.badge {
+  text-transform: none;
+  margin: .5rem;
+  font-size: .8rem;
+  padding: .8rem;
+}
+
+.plugin-card {
+  width: 100%;
+  margin: 0rem auto;
+  padding: 1rem;
+  border-radius: .5rem;
+}
+
+.plugin-card:hover {
+  cursor: pointer;
+}
+
+.plugin-img {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+}
+
+.mantine-NumberInput-rightSection {
+  width: 61px !important;
+}
+/*# sourceMappingURL=components.css.map */

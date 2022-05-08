@@ -14,6 +14,10 @@ import { Switch } from '@mantine/core'
 import AuthRoute from './layout/AuthRoute'
 import { useDispatch } from 'react-redux'
 import axios from 'axios'
+import Setting from './pages/dashboard/Setting'
+import Fee from './pages/dashboard/Fee'
+import CustomerCard from './pages/dashboard/CustomerCard'
+import Docs from './pages/docs/Docs'
 function App() {
   
  
@@ -23,6 +27,10 @@ function App() {
         <Router>
           <Routes>
             <Route path="/login" element={<Login />} />
+            <Route path="/docs" element={<Docs />} />
+            <Route path="/fee" element={<Fee />} />
+            <Route path="/customer" element={<CustomerCard />} />
+
             <Route
               element={
                 <Layout>
@@ -54,6 +62,15 @@ function App() {
                   </AuthRoute>
                 }
               />
+              <Route
+                path="/settings"
+                element={
+                  <AuthRoute>
+                    <Setting />
+                  </AuthRoute>
+                }
+              />
+
               <Route
                 path="/projects/:projectID"
                 element={

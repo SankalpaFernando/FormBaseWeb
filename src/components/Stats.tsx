@@ -1,6 +1,6 @@
 // @ts-nocheck
 
-import React from 'react';
+import React,{useEffect} from 'react';
 import { Card, Grid, Text, ThemeIcon } from '@mantine/core';
 import {
   ArchiveIcon,
@@ -24,15 +24,20 @@ import {
 import StatCard from './StatCard';
 
 const Stats: React.FC = () => {
-  const { data: dataSet, isLoading: isDataSetLoading } = useGetDataSetInfoQuery(
+  const { data: dataSet, isLoading: isDataSetLoading,refetch:dataSetRefetch } = useGetDataSetInfoQuery(
     {}
   );
-  const { data: forms, isLoading: isFormsLoading } = useGetFormInfoQuery({});
-  const { data: projects, isLoading: isProjectsLoading } =
+  const { data: forms, isLoading: isFormsLoading,refetch:formRefetch } = useGetFormInfoQuery({});
+  const { data: projects, isLoading: isProjectsLoading,refetch:projectRefetch } =
     useGetProjectInfoQuery({});
-  const { data: templates, isLoading: isTemplatesLoading } =
+  const { data: templates, isLoading: isTemplatesLoading,refetch:templateRefetch } =
     useGetTemplateInfoQuery({});
-
+  useEffect(() => {
+    dataSetRefetch()
+    formRefetch()
+    projectRefetch()
+    templateRefetch()
+  },[])
   return (
     <Grid>
       <Grid.Col xs={6} md={6} lg={3}>

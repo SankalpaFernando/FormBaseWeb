@@ -14,10 +14,11 @@ import {
 } from 'chart.js';
 import { useGetTotalSubmitsQuery } from '../redux/api/info';
 import { isEmpty } from 'lodash';
+import moment from "moment";
 
 const Chart: React.FC = () => {
 
-  const {data:DailySubmits,isLoading } = useGetTotalSubmitsQuery({});
+  const {data:DailySubmits,isLoading,refetch } = useGetTotalSubmitsQuery({});
 
   const theme = useMantineTheme();
   const color = theme.colors[theme.primaryColor.toString()][4];
@@ -40,26 +41,29 @@ const Chart: React.FC = () => {
        const writes: string[] = [];
        if (!isEmpty(DailySubmits)) {
 
-         DailySubmits?.data?.writeCounts.forEach(
-           (entry: { _id: string }) =>
-             !dates.includes(entry._id) && dates.push(entry._id)
-         );
-
-         dates.forEach((date) => {
+         let startDate = moment(new Date()).subtract(6, "day");
+         for (let day = 0; day < 7; day++){
            const writeIndex = DailySubmits?.data?.writeCounts.find(
-             (entry) => entry._id == date
-           );
+             (entry) => entry._id == startDate.format("YYYY-MM-DD")
+             );
+             
+             if (writeIndex !== undefined) {
+               writes.push(writeIndex.total);
+              } else {
+                writes.push(0);
+             }
+           dates.push(startDate.format("YYYY-MM-DD"))
+              startDate = startDate.add(1,"day")
+         }
 
-           if (writeIndex !== undefined) {
-             writes.push(writeIndex.total);
-           } else {
-             writes.push(0);
-           }
-         });
+       
 
          setChartData({ dates, writes });
        }
      }, [DailySubmits]);
+  useEffect(() => {
+    refetch()
+  },[])
   return (
     <Card shadow="xl" padding="xl" radius="lg">
       <Text

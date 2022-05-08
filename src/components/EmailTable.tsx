@@ -42,6 +42,7 @@ import { Check, X } from 'tabler-icons-react';
 import { v4 as uuid } from 'uuid';
 import fileDownload from 'js-file-download';
 import axios from 'axios';
+import { MdRefresh } from 'react-icons/md';
 
 type EntryTableDashboard = {
   formID: string;
@@ -60,7 +61,7 @@ const EmailTable: React.FC<EntryTableDashboard> = ({ formID }) => {
     sendEmailIds,
     { isSuccess: isSendEmailIdsSuccess, isLoading: isSendEmailIdsLoading },
   ] = useSendEmailIdsMutation();
-  const { data } = useGetEmailEntriesQuery({ formID, page });
+  const { data,refetch } = useGetEmailEntriesQuery({ formID, page });
   const toast = useToast();
 
   useEffect(() => {
@@ -170,6 +171,11 @@ const EmailTable: React.FC<EntryTableDashboard> = ({ formID }) => {
   };
   return (
     <div style={{ width: '70%', margin: '1rem auto' }}>
+      <div style={{ display: 'flex', justifyContent: 'right' }}>
+        <ActionIcon onClick={refetch} size="md">
+          <MdRefresh />
+        </ActionIcon>
+      </div>
       <Modal size="xl" opened={open} onClose={() => setOpen(false)}>
         <Grid>
           <Grid.Col>
@@ -213,7 +219,7 @@ const EmailTable: React.FC<EntryTableDashboard> = ({ formID }) => {
           </Grid.Col>
         </Grid>
       </Modal>
-      <Table mt={20} variant="unstyled">
+      <Table mt={10} variant="unstyled">
         <Thead>
           <Tr>
             <Th width="5%"></Th>
